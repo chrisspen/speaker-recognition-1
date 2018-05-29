@@ -6,9 +6,9 @@
 
 import sys
 from scipy.io import wavfile
-import matplotlib
-matplotlib.use("Qt4Agg")
-import matplotlib.pyplot as plt
+# import matplotlib
+# matplotlib.use("Qt4Agg")
+# import matplotlib.pyplot as plt
 import numpy as np
 
 from pyssp.vad.ltsd import LTSD

@@ -27,6 +27,9 @@ class GMMSet(object):
             self.gmm_order = gmm_order
         self.y = []
 
+    def get_gmm(self, label):
+        return self.gmms[self.y.index(label)]
+    
     def fit_new(self, x, label):
         self.y.append(label)
         gmm = GMM(self.gmm_order, **self.kwargs)
@@ -67,13 +70,18 @@ class GMMSet(object):
         return map(self.predict_one, X)
 
     def predict_one_with_rejection(self, x):
+        print('a1')
         assert self.ubm is not None, \
             "UBM must be given prior to conduct reject prediction."
+        print('a2')
         scores = self.predict_one_scores(x)
+        print('a3')
         x_len = len(x) # normalize score
         scores = map(lambda v: v / x_len, scores)
         max_tup = max(enumerate(scores), key=operator.itemgetter(1))
+        print('a4:', self.ubm)
         ubm_score = self.gmm_score(self.ubm, x) / x_len
+        print('a5')
         #print scores, ubm_score
         if max_tup[1] - ubm_score < self.reject_threshold:
             #print max_tup[1], ubm_score, max_tup[1] - ubm_score

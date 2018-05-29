@@ -93,6 +93,28 @@ class ModelInterface(object):
             return None
         return self.gmmset.predict_one(feat)
 
+    def predict_scores(self, fs, signal):
+        """
+        return a label (name)
+        """
+        try:
+            feat = mix_feature((fs, signal))
+        except Exception as e:
+            print tb.format_exc()
+            return None
+        return self.gmmset.predict_one_scores(feat)
+
+    def predict_with_reject(self, fs, signal):
+        """
+        return a label (name)
+        """
+        try:
+            feat = mix_feature((fs, signal))
+        except Exception as e:
+            print tb.format_exc()
+            return None
+        return self.gmmset.predict_one_with_rejection(feat)
+        
     def dump(self, fname):
         """ dump all models to file"""
         self.gmmset.before_pickle()

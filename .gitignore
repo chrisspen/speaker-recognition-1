@@ -12,3 +12,6 @@ src/gui/*.model
 corpus.silence-removed
 
 .vimrc.local
+*.out
+*.geany
+/.env
