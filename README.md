@@ -8,28 +8,30 @@ For more details of this project, please see:
 + Our [complete report](https://github.com/ppwwyyxx/speaker-recognition/raw/master/doc/Final-Report-Complete.pdf)
 
 ## Dependencies
-+ Linux
-+ [scikit-learn](http://scikit-learn.org/)
-+ [scikits.talkbox](http://scikits.appspot.com/talkbox)
-+ [pyssp](https://pypi.python.org/pypi/pyssp)
-+ [PyQt4](http://sourceforge.net/projects/pyqt/)
-+ [PyAudio](http://people.csail.mit.edu/hubert/pyaudio/)
+
+The [Dockerfile](Dockerfile) can be used to get started with the project easier.
+
++ Linux, Python 2
++ [scikit-learn](http://scikit-learn.org/),
+  [scikits.talkbox](http://scikits.appspot.com/talkbox), 
+  [pyssp](https://pypi.python.org/pypi/pyssp), 
+  [PyAudio](http://people.csail.mit.edu/hubert/pyaudio/):
+  ```
+  pip install --user scikit-learn scikits.talkbox pyssp PyAudio
+  ```
++ [PyQt4](http://sourceforge.net/projects/pyqt/), usually can be installed by
+  your package manager.
 + (Optional)Python bindings for [bob](http://idiap.github.io/bob/):
-	+ install blitz, openblas, boost
-	+ `pip install --user bob.extension bob.blitz bob.core bob.sp bob.ap`
+	+ install blitz, openblas, boost, then:
+	```
+	for p in bob.extension bob.blitz bob.core bob.sp bob.ap; do
+		pip install --user $p
+	done
+	```
 
 Note: We have a MFCC implementation on our own
 which will be used as a fallback when bob is unavailable.
 But it's not so efficient as the C implementation in bob.
-
-<!--
-   -## Compile GMM (Optional)
-   -
-   -Run `make -C src/gmm`. Require gcc >= 4.7.
-   -If compiled successfully, it will be used by default instead of GMM from scikit-learn.
-   -But it doesn't make much difference apart from the speed.
-	 -->
-
 
 ## Algorithms Used
 
@@ -56,7 +58,8 @@ You can See our [demo video](https://github.com/ppwwyyxx/speaker-recognition/raw
 Note that real-time speaker recognition is extremely hard, because we only use corpus of about 1 second length to identify the speaker.
 Therefore the system doesn't work very perfect.
 
-The GUI part is quite hacky for demo purpose and is not maintained anymore today. Take it as a reference, but don't expect it to work out of the box. Use command line tools to try the algorithms.
+The GUI part is quite hacky for demo purpose and is not maintained anymore today.
+Take it as a reference, but don't expect it to work out of the box. Use command line tools to try the algorithms instead.
 
 ## Command Line Tools
 ```sh

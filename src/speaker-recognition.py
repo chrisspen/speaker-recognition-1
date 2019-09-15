@@ -53,11 +53,6 @@ Examples:
 
 def task_enroll(input_dirs, output_model):
     m = ModelInterface()
-    
-    # print('gmmset.file:', type(m.gmmset))
-    # import inspect
-    # print('gmmset.source:', inspect.getsourcefile(m.gmmset))
-    
     input_dirs = [os.path.expanduser(k) for k in input_dirs.strip().split()]
     dirs = itertools.chain(*(glob.glob(d) for d in input_dirs))
     dirs = [d for d in dirs if os.path.isdir(d)]
@@ -65,6 +60,7 @@ def task_enroll(input_dirs, output_model):
     if len(dirs) == 0:
         print "No valid directory found!"
         sys.exit(1)
+    training_stats = []
     for d in dirs:
         label = os.path.basename(d.rstrip('/'))
 
@@ -72,39 +68,29 @@ def task_enroll(input_dirs, output_model):
         if len(wavs) == 0:
             print "No wav file found in {0}".format(d)
             continue
-        print "Label {0} has files {1}".format(label, ','.join(wavs))
+        print "Label '{0}' has files: {1}".format(label, ', '.join(wavs))
+        total_len = 0
         for wav in wavs:
             fs, signal = read_wav(wav)
-            print('label:', label, wav)
+            print "   File '{}' has frequency={} and length={}".format(wav, fs, len(signal))
+            total_len += len(signal)
             m.enroll(label, fs, signal)
             m.enroll(UBM_LABEL, fs, signal)
-            # print('y:', m.gmmset.y)
-            # ubm_gmm = m.gmmset.gmms(m.gmmset.y.index(UBM_LABEL))
+        training_stats.append((label, total_len))
+    print "--------------------------------------------"
+    for label, total_len in training_stats:
+        print "Total length of training data for '{}' is {}".format(label, total_len)
+    print "For best accuracy, please make sure all labels have similar amount of training data!"
 
     m.train()
-    
-    # Retroactively set UBM.
-    # Unnecessary?
-    # ubm_gmm = m.gmmset.gmms[m.gmmset.y.index(UBM_LABEL)]
-    # m.gmmset.ubm = ubm_gmm
-    # m.gmmset.gmm_order = ubm_gmm.get_nr_mixtures()
-
-    # Save model.
     m.dump(output_model)
 
 def task_predict(input_files, input_model):
-    # from gmmset import GMM
     m = ModelInterface.load(input_model)
-    # m.gmmset.ubm = GMM.load('gui/model/ubm.mixture-32.person-20.immature.model')
-    # m.gmmset.gmm_order = m.gmmset.ubm.get_nr_mixtures()
     for f in glob.glob(os.path.expanduser(input_files)):
         fs, signal = read_wav(f)
-        # label = m.predict(fs, signal)
-        # label = m.predict_with_reject(fs, signal)
-        # print f, '->', label
         scores = m.predict_scores(fs, signal)
         y_scores = dict(zip(m.gmmset.y, scores))
-        # # print 'y:', m.gmmset.y
         print f, '->'
         for label, score in sorted(y_scores.items(), key=lambda o: o[1], reverse=True):
             print score, label
