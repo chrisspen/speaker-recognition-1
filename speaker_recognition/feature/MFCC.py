@@ -16,10 +16,10 @@ def hamming(n):
     """ Generate a hamming window of n points as a numpy array.  """
     return 0.54 - 0.46 * cos(2 * pi / n * (arange(n) + 0.5))
 
+
 class MFCCExtractor(object):
 
-    def __init__(self, fs, win_length_ms, win_shift_ms, FFT_SIZE, n_bands, n_coefs,
-                 PRE_EMPH, verbose = False):
+    def __init__(self, fs, win_length_ms, win_shift_ms, FFT_SIZE, n_bands, n_coefs, PRE_EMPH, verbose=False):
         self.PRE_EMPH = PRE_EMPH
         self.fs = fs
         self.n_bands = n_bands
@@ -31,16 +31,14 @@ class MFCCExtractor(object):
 
         self.window = hamming(self.FRAME_LEN)
 
-
         self.M, self.CF = self._mel_filterbank()
 
         dctmtx = MFCCExtractor.dctmtx(self.n_bands)
-        self.D = dctmtx[1: self.coefs + 1]
-        self.invD = linalg.inv(dctmtx)[:, 1: self.coefs + 1]
+        self.D = dctmtx[1:self.coefs + 1]
+        self.invD = linalg.inv(dctmtx)[:, 1:self.coefs + 1]
 
         self.verbose = verbose
         # The inverse DCT matrix. Change the index to [0:COEFS] if you want to keep the 0-th coefficient
-
 
     def dprint(self, msg):
         """ Debug print. """
@@ -59,13 +57,12 @@ class MFCCExtractor(object):
         feature = []
         for f in xrange(frames):
             # Windowing
-            frame = signal[f * self.FRAME_SHIFT : f * self.FRAME_SHIFT +
-                           self.FRAME_LEN] * self.window
+            frame = signal[f * self.FRAME_SHIFT:f * self.FRAME_SHIFT + self.FRAME_LEN] * self.window
             # Pre-emphasis
             frame[1:] -= frame[:-1] * self.PRE_EMPH
             # Power spectrum
-            X = abs(fft.fft(frame, self.FFT_SIZE)[:self.FFT_SIZE / 2 + 1]) ** 2
-            X[X < POWER_SPECTRUM_FLOOR] = POWER_SPECTRUM_FLOOR  # Avoid zero
+            X = abs(fft.fft(frame, self.FFT_SIZE)[:self.FFT_SIZE / 2 + 1])**2
+            X[X < POWER_SPECTRUM_FLOOR] = POWER_SPECTRUM_FLOOR # Avoid zero
             # Mel filtering, logarithm, DCT
             X = dot(self.D, log(dot(self.M, X)))
             feature.append(X)
@@ -99,10 +96,10 @@ class MFCCExtractor(object):
         M = zeros((self.n_bands, 1 + fn2))
         for c in xrange(b2 - 1, b4):
             r = int(fp[c] - 1)
-            M[r, c+1] += 2 * (1 - pm[c])
+            M[r, c + 1] += 2 * (1 - pm[c])
         for c in xrange(b3):
             r = int(fp[c])
-            M[r, c+1] += 2 * pm[c]
+            M[r, c + 1] += 2 * pm[c]
         return M, CF
 
     @staticmethod
@@ -113,13 +110,12 @@ class MFCCExtractor(object):
         D[0] /= sqrt(2)
         return D
 
+
 @cached_func
-def get_mfcc_extractor(fs, win_length_ms=32, win_shift_ms=16,
-                       FFT_SIZE=2048, n_filters=50, n_ceps=13,
-                       pre_emphasis_coef=0.95):
-    ret = MFCCExtractor(fs, win_length_ms, win_shift_ms, FFT_SIZE, n_filters,
-                       n_ceps, pre_emphasis_coef)
+def get_mfcc_extractor(fs, win_length_ms=32, win_shift_ms=16, FFT_SIZE=2048, n_filters=50, n_ceps=13, pre_emphasis_coef=0.95):
+    ret = MFCCExtractor(fs, win_length_ms, win_shift_ms, FFT_SIZE, n_filters, n_ceps, pre_emphasis_coef)
     return ret
+
 
 def extract(fs, signal=None, diff=False, **kwargs):
     """accept two argument, or one as a tuple"""

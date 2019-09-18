@@ -12,15 +12,18 @@ from scipy.io import wavfile
 import random
 import numpy as np
 
+
 def mix_feature(tup):
     bob = BOB.extract(tup)
     lpc = LPC.extract(tup)
     return np.concatenate((bob, lpc), axis=1)
 
+
 def monotize_signal(signal):
     if signal.ndim > 1:
-        signal = signal[:,0]
+        signal = signal[:, 0]
     return signal
+
 
 def test_ubm_var_channel():
     ubm = GMM.load('model/ubm.mixture-32.person-20.immature.model')
@@ -42,7 +45,7 @@ def test_ubm_var_channel():
 
         for i in range(nr_test):
             start = random.randint(train_len, len(signal) - test_len)
-            X_test.append(mix_feature((fs, signal[start:start+train_len])))
+            X_test.append(mix_feature((fs, signal[start:start + train_len])))
             y_test.append(audio_file)
 
     gmmset = GMMSet(32, ubm=ubm)
@@ -51,12 +54,12 @@ def test_ubm_var_channel():
     for i in xrange(len(y_pred)):
         print(y_test[i], y_pred[i], '' if y_test[i] == y_pred[i] else 'wrong')
 
-    for imposter_audio_file in map(
-            lambda x: 'test-{}.wav'.format(x), range(5)):
+    for imposter_audio_file in map(lambda x: 'test-{}.wav'.format(x), range(5)):
         fs, signal = wavfile.read(imposter_audio_file)
         signal = monotize_signal(signal)
         imposter_x = mix_feature((fs, signal))
         print(gmmset.predict_one_with_rejection(imposter_x))
+
 
 test_ubm_var_channel()
 import sys
@@ -79,4 +82,3 @@ gmm.fit(X, ubm=ubm)
 gmm.dump('xinyu.model')
 
 # vim: foldmethod=marker
-

@@ -8,9 +8,10 @@ import operator
 import numpy as np
 from sklearn.mixture import GaussianMixture as GMM
 
+
 class GMMSet(object):
 
-    def __init__(self, gmm_order = 32):
+    def __init__(self, gmm_order=32):
         self.gmms = []
         self.gmm_order = gmm_order
         self.y = []

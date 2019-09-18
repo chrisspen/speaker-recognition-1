@@ -4,7 +4,6 @@
 # Date: Sun Nov 12 10:25:52 2017 +0800
 # Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
-
 import sys
 import shutil
 import os.path
@@ -16,18 +15,20 @@ from PyQt4 import uic
 from scipy.io import wavfile
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from PyQt4 import QtCore,QtGui
+from PyQt4 import QtCore, QtGui
 
 import pyaudio
 
 from .utils import read_wav, write_wav, time_str, monophonic
 from .interface import ModelInterface
 
-FORMAT=pyaudio.paInt16
+FORMAT = pyaudio.paInt16
 NPDtype = 'int16'
 NAMELIST = ['Nobody']
 
+
 class RecorderThread(QThread):
+
     def __init__(self, main):
         QThread.__init__(self)
         self.main = main
@@ -42,6 +43,7 @@ class RecorderThread(QThread):
             stop = self.main.add_record_data(i)
             if stop:
                 break
+
 
 class Main(QMainWindow):
     CONV_INTERVAL = 0.4
@@ -72,12 +74,12 @@ class Main(QMainWindow):
 
         self.recoRecord.clicked.connect(self.start_reco_record)
         self.stopRecoRecord.clicked.connect(self.stop_reco_record)
-#        self.newReco.clicked.connect(self.new_reco)
+        #        self.newReco.clicked.connect(self.new_reco)
         self.recoFile.clicked.connect(self.reco_file)
         self.recoInputFiles.clicked.connect(self.reco_files)
 
         #UI.init
-        self.userdata =[]
+        self.userdata = []
         self.loadUsers()
         self.Userchooser.currentIndexChanged.connect(self.showUserInfo)
         self.ClearInfo.clicked.connect(self.clearUserInfo)
@@ -123,7 +125,6 @@ class Main(QMainWindow):
         except:
             pass
 
-
     ############ RECORD
     def start_record(self):
         self.pyaudio = pyaudio.PyAudio()
@@ -131,10 +132,8 @@ class Main(QMainWindow):
         self.movie.start()
         self.Alading.setPixmap(QPixmap(u"image/a_thinking.png"))
 
-
         self.recordData = []
-        self.stream = self.pyaudio.open(format=FORMAT, channels=1, rate=Main.FS,
-                        input=True, frames_per_buffer=1)
+        self.stream = self.pyaudio.open(format=FORMAT, channels=1, rate=Main.FS, input=True, frames_per_buffer=1)
         self.stopped = False
         self.reco_th = RecorderThread(self)
         self.reco_th.start()
@@ -181,8 +180,7 @@ class Main(QMainWindow):
         interval_len = int(Main.CONV_INTERVAL * Main.FS)
         segment_len = int(Main.CONV_DURATION * Main.FS)
         self.conv_now_pos += interval_len
-        to_filter = self.recordData[max([self.conv_now_pos - segment_len, 0]):
-                                   self.conv_now_pos]
+        to_filter = self.recordData[max([self.conv_now_pos - segment_len, 0]):self.conv_now_pos]
         signal = np.array(to_filter, dtype=NPDtype)
         label = None
         try:
@@ -211,7 +209,6 @@ class Main(QMainWindow):
         self.convUsername.setText(label_to_show)
         self.Alading_conv.setPixmap(QPixmap(u"image/a_result.png"))
         self.convUserImage.setPixmap(self.get_avatar(label_to_show))
-
 
     ###### RECOGNIZE
     def start_reco_record(self):
@@ -244,7 +241,6 @@ class Main(QMainWindow):
             real_len = 100
 
         self.reco_do_predict(fs, self.recoRecordData)
-
 
     def reco_file(self):
         fname = QFileDialog.getOpenFileName(self, "Open Wav File", "", "Files (*.wav)")
@@ -291,6 +287,8 @@ class Main(QMainWindow):
         if not name:
             self.warn("Please Input Your Name")
             return
+
+
 #        self.addUserInfo()
         new_signal = self.backend.filter(*self.enrollWav)
         print("After removed: {0} -> {1}".format(len(self.enrollWav[1]), len(new_signal)))
@@ -348,16 +346,16 @@ class Main(QMainWindow):
             u[2] = 'F'
         else:
             u[2] = 'M'
-        with open("avatar/metainfo.txt","w") as db:
+        with open("avatar/metainfo.txt", "w") as db:
             for user in self.userdata:
                 for i in range(3):
                     db.write(str(user[i]) + " ")
                 db.write("\n")
 
     def writeuserdata(self):
-        with open("avatar/metainfo.txt","w") as db:
+        with open("avatar/metainfo.txt", "w") as db:
             for user in self.userdata:
-                for i in range (0,4):
+                for i in range(0, 4):
                     db.write(str(user[i]) + " ")
                 db.write("\n")
 
@@ -383,7 +381,6 @@ class Main(QMainWindow):
         self.userdata.append(newuser)
         self.writeuserdata()
         self.Userchooser.addItem(unicode(self.Username.displayText()))
-
 
     ############# UTILS
     def warn(self, s):
@@ -454,6 +451,7 @@ class Main(QMainWindow):
             print(name, len(feat))
         print("GMMs")
         print(len(self.backend.gmmset.gmms))
+
     '''
     def TempButton(self):
         import random
@@ -466,9 +464,12 @@ class Main(QMainWindow):
     def LogButton(self):
         self.graphwindow.wid.reset()
     '''
+
+
 class GraphWindow(QWidget):
-    def __init__(self,parent = None):
-        super(GraphWindow,self).__init__(parent)
+
+    def __init__(self, parent=None):
+        super(GraphWindow, self).__init__(parent)
         self.setGeometry(300, 100, 920, 510)
         self.setWindowTitle('Conversation Flow Graph')
         self.wid = BurningWidget()
@@ -506,8 +507,8 @@ class BurningWidget(QtGui.QWidget):
     def initUI(self):
         self.setMinimumSize(1, 510)
         self.num = []
-        self.Unknowncolor = QColor(204,204,204)
-        self.colorlist = [QColor(255,102,102), QColor(255,255,0), QColor(51,153,204), QColor(0,153,51), QColor(0, 255, 255)]
+        self.Unknowncolor = QColor(204, 204, 204)
+        self.colorlist = [QColor(255, 102, 102), QColor(255, 255, 0), QColor(51, 153, 204), QColor(0, 153, 51), QColor(0, 255, 255)]
         '''
         with open("timeline.txt") as db:
             for line in db:
@@ -523,7 +524,6 @@ class BurningWidget(QtGui.QWidget):
         self.nowtime = 0
         self.timer.start()
         self.timer.timeout.connect(self.timer_out)
-
 
     def timer_out(self):
         self.nowtime += 0.1
@@ -544,7 +544,7 @@ class BurningWidget(QtGui.QWidget):
         self.timer.start()
         self.repaint()
 
-    def time2string(self,time):
+    def time2string(self, time):
         totalsec = int(time)
         minute = totalsec / 60
         second = totalsec % 60
@@ -590,63 +590,70 @@ class BurningWidget(QtGui.QWidget):
 
         font = QtGui.QFont('Arial', 30, QtGui.QFont.Bold)
         qp.setFont(font)
-        qp.drawText(10,40,NAMELIST[-1])
+        qp.drawText(10, 40, NAMELIST[-1])
 
         font = QtGui.QFont('Arial', 20, QtGui.QFont.Bold)
         qp.setFont(font)
         dot = int(self.nowtime) % 4
-        qp.drawText(10,80,"Speaking" + "." * dot)
-        qp.drawText(10,h - 80,"Timeline")
+        qp.drawText(10, 80, "Speaking" + "." * dot)
+        qp.drawText(10, h - 80, "Timeline")
 
-        for i in range(0,len(self.nameset)):
+        for i in range(0, len(self.nameset)):
             if self.nameset[i] != "Nobody":
                 if NAMELIST[-1] == self.nameset[i]:
-                    qp.drawImage(int (startx + i *(margin + picsize)) + (picsize - self.updatebigdelta) / 2, (picsize - self.updatebigdelta) / 2, QImage(self.get_avatar(self.nameset[i])).scaled(self.updatebigdelta,self.updatebigdelta))
+                    qp.drawImage(
+                        int(startx + i * (margin + picsize)) + (picsize - self.updatebigdelta) / 2, (picsize - self.updatebigdelta) / 2,
+                        QImage(self.get_avatar(self.nameset[i])).scaled(self.updatebigdelta, self.updatebigdelta)
+                    )
                 elif NAMELIST[-2] == self.nameset[i]:
-                    qp.drawImage(int (startx + i *(margin + picsize)) + (picsize - self.updatedelta) / 2, (picsize - self.updatedelta) / 2, QImage(self.get_avatar(self.nameset[i])).scaled(self.updatedelta,self.updatedelta))
+                    qp.drawImage(
+                        int(startx + i * (margin + picsize)) + (picsize - self.updatedelta) / 2, (picsize - self.updatedelta) / 2,
+                        QImage(self.get_avatar(self.nameset[i])).scaled(self.updatedelta, self.updatedelta)
+                    )
                 else:
-                    qp.drawImage(int (startx + i *(margin + picsize) + (picsize - 120) / 2), (picsize - 120) / 2, QImage(self.get_avatar(self.nameset[i])).scaled(120,120))
+                    qp.drawImage(
+                        int(startx + i * (margin + picsize) + (picsize - 120) / 2), (picsize - 120) / 2,
+                        QImage(self.get_avatar(self.nameset[i])).scaled(120, 120)
+                    )
 
         font = QtGui.QFont('Arial', 12, QtGui.QFont.Light)
         qp.setFont(font)
 
-        for i in range(0,len(NAMELIST)):
-            outside = QPen(QColor(255,255,255))
-            inside = QPen(QColor(0,0,0))
+        for i in range(0, len(NAMELIST)):
+            outside = QPen(QColor(255, 255, 255))
+            inside = QPen(QColor(0, 0, 0))
             outside.setWidth(4)
             qp.setPen(outside)
             qp.setBrush(self.colorlist[self.nameset.index(NAMELIST[i])])
             if i == len(NAMELIST) - 1:
                 if (NAMELIST[i] == "Nobody"):
                     qp.setBrush(self.Unknowncolor)
-                qp.drawRoundRect(laststart, h - barheight, 9000, barheight,10,10)
+                qp.drawRoundRect(laststart, h - barheight, 9000, barheight, 10, 10)
                 if (NAMELIST[i] != "Nobody"):
-                    qp.drawImage(int(laststart), int(h + 35),QImage(self.get_avatar(NAMELIST[i])).scaled(70,70))
+                    qp.drawImage(int(laststart), int(h + 35), QImage(self.get_avatar(NAMELIST[i])).scaled(70, 70))
                     qp.setPen(inside)
-                    qp.drawText(int(laststart), int (h + 130),NAMELIST[i])
-                    qp.drawText(int(laststart), int (h + 150),self.time2string(self.num[i]) + "~" + self.time2string(self.nowtime))
+                    qp.drawText(int(laststart), int(h + 130), NAMELIST[i])
+                    qp.drawText(int(laststart), int(h + 150), self.time2string(self.num[i]) + "~" + self.time2string(self.nowtime))
 
                 #qp.drawImage(380,0,QImage(self.get_avatar(NAMELIST[i])))
             else:
                 if (NAMELIST[i] == "Nobody"):
                     qp.setBrush(self.Unknowncolor)
-                qp.drawRoundRect(laststart, h - barheight, round((self.num[i + 1] - self.num[i]) * zoomer), barheight,30,30)
+                qp.drawRoundRect(laststart, h - barheight, round((self.num[i + 1] - self.num[i]) * zoomer), barheight, 30, 30)
                 if (NAMELIST[i] != "Nobody"):
-                    qp.drawImage(int(laststart), int(h + 35),QImage(self.get_avatar(NAMELIST[i])).scaled(70,70))
-                    qp.drawEllipse(int(laststart) + 60, h,20,15)
-                    qp.drawEllipse(int(laststart) + 30, h + 15,15,10)
+                    qp.drawImage(int(laststart), int(h + 35), QImage(self.get_avatar(NAMELIST[i])).scaled(70, 70))
+                    qp.drawEllipse(int(laststart) + 60, h, 20, 15)
+                    qp.drawEllipse(int(laststart) + 30, h + 15, 15, 10)
                     qp.setPen(inside)
-                    qp.drawText(int(laststart), int (h + 130),NAMELIST[i])
-                    qp.drawText(int(laststart), int (h + 150),self.time2string(self.num[i]) + "~" + self.time2string(self.num[i + 1]))
+                    qp.drawText(int(laststart), int(h + 130), NAMELIST[i])
+                    qp.drawText(int(laststart), int(h + 150), self.time2string(self.num[i]) + "~" + self.time2string(self.num[i + 1]))
                 laststart = 900 - (self.nowtime - self.num[i + 1]) * zoomer
                 #laststart + round((self.num[i + 1] - self.num[i]) * zoomer)
 
-        pen = QtGui.QPen(QtGui.QColor(20, 20, 20), 1,
-            QtCore.Qt.SolidLine)
+        pen = QtGui.QPen(QtGui.QColor(20, 20, 20), 1, QtCore.Qt.SolidLine)
 
         qp.setPen(pen)
         qp.setBrush(QtCore.Qt.NoBrush)
-
         '''
         for i in range(0,len(NAMELIST)):
             qp.drawLine(i, 0, i, 5)
@@ -659,8 +666,6 @@ class BurningWidget(QtGui.QWidget):
                 qp.drawText((int(self.num[i - 1]) * zoomer)-fw/2, 150, str(NAMELIST[i]))
                 qp.drawText((int(self.num[i - 1]) * zoomer)-fw/2, 150 - 15, str(self.num[i]))
         '''
-
-
 
 
 if __name__ == "__main__":

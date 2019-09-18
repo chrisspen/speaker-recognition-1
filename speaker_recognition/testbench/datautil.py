@@ -12,10 +12,11 @@ import config
 import numpy as np
 from numpy import loadtxt
 
+
 def load_train_test(fname, training_data_len, nr_test, testcase_len):
     """
     :return: training_data, test_data"""
-    data =loadtxt(fname)
+    data = loadtxt(fname)
     data_len = len(data)
     training_data = data[:training_data_len]
     test_data = []
@@ -26,6 +27,7 @@ def load_train_test(fname, training_data_len, nr_test, testcase_len):
 
     test_data = np.array(test_data)
     return training_data, test_data
+
 
 def main():
     fname = 'test-data/mfcc-data/Style_Reading/f_001_03.mfcc'
@@ -41,6 +43,7 @@ def main():
 
     train, test = load_train_test(fname, train_len, nr_test, testcase_len)
 
+
 def read_raw_data(pattern):
     """:return X"""
     if isinstance(pattern, basestring):
@@ -50,7 +53,7 @@ def read_raw_data(pattern):
 
     X = []
     for fpath in fpaths:
-        print('loading file {} ... ' . format(fpath))
+        print('loading file {} ... '.format(fpath))
         X.extend(loadtxt(fpath))
     return X
 
@@ -67,19 +70,17 @@ def read_data(pattern, nr_person, shuffle=True):
     if shuffle:
         random.shuffle(fpaths)
     for fpath in fpaths[:nr_person]:
-        print('reading {} ...' . format(fpath))
+        print('reading {} ...'.format(fpath))
         fname = os.path.basename(fpath)
         base, ext = os.path.splitext(fname)
-        x_train, x_test = load_train_test(fpath,
-                config.train_len,
-                config.nr_test,
-                config.testcase_len)
+        x_train, x_test = load_train_test(fpath, config.train_len, config.nr_test, config.testcase_len)
         X_train.append(x_train)
         X_test.extend(x_test)
         y_train.append(base)
         y_test.extend([base] * len(x_test))
 
     return X_train, y_train, X_test, y_test
+
 
 if __name__ == '__main__':
     main()

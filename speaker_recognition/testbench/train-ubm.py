@@ -16,6 +16,7 @@ from gmmset import GMM
 
 nr_mixture = 32
 
+
 def get_gmm():
     from sklearn.mixture import GMM as skGMM
     from gmmset import GMM as pyGMM
@@ -24,17 +25,13 @@ def get_gmm():
         return GMM(nr_mixture)
     else:
         print('using pyGMM')
-        return GMM(nr_mixture=nr_mixture, nr_iteration=500,
-                init_with_kmeans=0, concurrency=8,
-                threshold=1e-15,
-                verbosity=2)
+        return GMM(nr_mixture=nr_mixture, nr_iteration=500, init_with_kmeans=0, concurrency=8, threshold=1e-15, verbosity=2)
 
 
 def get_all_data_fpaths():
     fpaths = []
     for style in ['Style_Reading', 'Style_Spontaneous', 'Style_Whisper']:
-        fpaths.extend(glob.glob('test-data/mfcc-lpc-data/{}/*.mfcc-lpc' .
-            format(style)))
+        fpaths.extend(glob.glob('test-data/mfcc-lpc-data/{}/*.mfcc-lpc'.format(style)))
     return fpaths
 
 
@@ -47,8 +44,8 @@ def train_all_together_ubm():
     X = datautil.read_raw_data(fpaths)
     gmm = get_gmm()
     gmm.fit(X)
-    gmm.dump('model/ubm.mixture-{}.utt-{}.model' . format(
-        nr_mixture, nr_utt_in_ubm))
+    gmm.dump('model/ubm.mixture-{}.utt-{}.model'.format(nr_mixture, nr_utt_in_ubm))
+
 
 def main():
     train_all_together_ubm()

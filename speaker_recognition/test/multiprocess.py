@@ -1,15 +1,16 @@
 from multiprocessing import Process, Queue, cpu_count
 import weakref
 
+
 class MultiProcessWorker(object):
     worker_func = None
     worker_proc = None
     nr_worker = None
 
-    task = None     # queue of tasks: (task id, task arg)
-    result = None   # queue of task results: (task id, result)
+    task = None # queue of tasks: (task id, task arg)
+    result = None # queue of task results: (task id, result)
 
-    def __init__(self, worker, nr_worker = cpu_count()):
+    def __init__(self, worker, nr_worker=cpu_count()):
         """:param worker: worker callable, taking an argument and return the
         result"""
         self.worker_func = worker
@@ -49,10 +50,7 @@ class MultiProcessWorker(object):
             return
         self.task = Queue()
         self.result = Queue()
-        self.worker_proc = [
-                Process(target = type(self)._worker,
-                    args = (weakref.proxy(self), ))
-                for _ in range(self.nr_worker)]
+        self.worker_proc = [Process(target=type(self)._worker, args=(weakref.proxy(self),)) for _ in range(self.nr_worker)]
         for i in self.worker_proc:
             i.start()
 

@@ -7,14 +7,15 @@
 import time
 
 from numpy import *
-from scipy.io import  wavfile
+from scipy.io import wavfile
 
 from .MFCC import hamming
 from .utils import cached_func, diff_feature
 
+
 class LPCExtractor(object):
-    def __init__(self, fs, win_length_ms, win_shift_ms, n_lpc,
-                 pre_emphasis_coef):
+
+    def __init__(self, fs, win_length_ms, win_shift_ms, n_lpc, pre_emphasis_coef):
         self.PRE_EMPH = pre_emphasis_coef
         self.n_lpc = n_lpc
         #self.n_lpcc = n_lpcc + 1
@@ -22,7 +23,6 @@ class LPCExtractor(object):
         self.FRAME_LEN = int(float(win_length_ms) / 1000 * fs)
         self.FRAME_SHIFT = int(float(win_shift_ms) / 1000 * fs)
         self.window = hamming(self.FRAME_LEN)
-
 
     def lpc_to_cc(self, lpc):
         lpcc = zeros(self.n_lpcc)
@@ -49,8 +49,7 @@ class LPCExtractor(object):
         frames = (len(signal) - self.FRAME_LEN) / self.FRAME_SHIFT + 1
         feature = []
         for f in xrange(frames):
-            frame = signal[f * self.FRAME_SHIFT : f * self.FRAME_SHIFT +
-                           self.FRAME_LEN] * self.window
+            frame = signal[f * self.FRAME_SHIFT:f * self.FRAME_SHIFT + self.FRAME_LEN] * self.window
             frame[1:] -= frame[:-1] * self.PRE_EMPH
             feature.append(self.lpcc(frame))
 
@@ -58,9 +57,9 @@ class LPCExtractor(object):
         feature[isnan(feature)] = 0
         return feature
 
+
 @cached_func
-def get_lpc_extractor(fs, win_length_ms=32, win_shift_ms=16,
-                       n_lpc=15, pre_emphasis_coef=0.95):
+def get_lpc_extractor(fs, win_length_ms=32, win_shift_ms=16, n_lpc=15, pre_emphasis_coef=0.95):
     ret = LPCExtractor(fs, win_length_ms, win_shift_ms, n_lpc, pre_emphasis_coef)
     return ret
 
@@ -75,6 +74,7 @@ def extract(fs, signal=None, diff=False, **kwargs):
     if diff:
         return diff_feature(ret)
     return ret
+
 
 if __name__ == "__main__":
     extractor = LPCCExtractor(8000)

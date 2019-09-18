@@ -13,10 +13,10 @@ import numpy as np
 
 from .gmm.python.pygmm import GMM
 
+
 class GMMSet(object):
-    def __init__(self, gmm_order=32, ubm=None,
-            reject_threshold=10,
-            **kwargs):
+
+    def __init__(self, gmm_order=32, ubm=None, reject_threshold=10, **kwargs):
         self.kwargs = kwargs
         self.gmms = []
         self.ubm = ubm
@@ -97,6 +97,7 @@ class GMMSet(object):
 
 
 class GMMSetPyGMM(GMMSet):
+
     def predict_one(self, x):
         scores = [gmm.score_all(x) / len(x) for gmm in self.gmms]
         p = sorted(scores)
@@ -107,7 +108,6 @@ class GMMSetPyGMM(GMMSet):
 
     def after_pickle(self):
         self.gmms = [GMM.loads(x) for x in self.gmms]
-
 
 
 # vim: foldmethod=marker

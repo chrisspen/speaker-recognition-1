@@ -9,9 +9,10 @@ from scipy.io import wavfile
 import sys
 import numpy as np
 
+
 def main():
-    if not(len(sys.argv) == 2 or len(sys.argv) == 4):
-        print("Usage: {} <wav_file> [<start_sec> <end_sec>]" .format(sys.argv[0]))
+    if not (len(sys.argv) == 2 or len(sys.argv) == 4):
+        print("Usage: {} <wav_file> [<start_sec> <end_sec>]".format(sys.argv[0]))
         sys.exit(1)
 
     fs, signal = wavfile.read(sys.argv[1])
@@ -28,8 +29,8 @@ def main():
     plt.plot(x, y)
     plt.show()
 
+
 if __name__ == '__main__':
     main()
-
 
 # vim: foldmethod=marker

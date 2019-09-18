@@ -19,6 +19,7 @@ from .gui.filters.silence import remove_silence
 
 UBM_LABEL = '_ubm'
 
+
 def get_args():
     desc = "Speaker Recognition Command Line Tool"
     epilog = """
@@ -32,23 +33,17 @@ Examples:
     Predict (predict the speaker of all wav files):
     ./speaker-recognition.py -t predict -i "./*.wav" -m model.out
 """
-    parser = argparse.ArgumentParser(description=desc,epilog=epilog,
-                                    formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(description=desc, epilog=epilog, formatter_class=argparse.RawDescriptionHelpFormatter)
 
-    parser.add_argument('-t', '--task',
-                       help='Task to do. Either "enroll" or "predict"',
-                       required=True)
+    parser.add_argument('-t', '--task', help='Task to do. Either "enroll" or "predict"', required=True)
 
-    parser.add_argument('-i', '--input',
-                       help='Input Files(to predict) or Directories(to enroll)',
-                       required=True)
+    parser.add_argument('-i', '--input', help='Input Files(to predict) or Directories(to enroll)', required=True)
 
-    parser.add_argument('-m', '--model',
-                       help='Model file to save(in enroll) or use(in predict)',
-                       required=True)
+    parser.add_argument('-m', '--model', help='Model file to save(in enroll) or use(in predict)', required=True)
 
     ret = parser.parse_args()
     return ret
+
 
 def task_enroll(input_dirs, output_model):
     m = ModelInterface()
@@ -84,6 +79,7 @@ def task_enroll(input_dirs, output_model):
     m.train()
     m.dump(output_model)
 
+
 def task_predict(input_files, input_model):
     m = ModelInterface.load(input_model)
     for f in glob.glob(os.path.expanduser(input_files)):
@@ -93,6 +89,7 @@ def task_predict(input_files, input_model):
         print(f, '->')
         for label, score in sorted(y_scores.items(), key=lambda o: o[1], reverse=True):
             print(score, label)
+
 
 if __name__ == '__main__':
     global args

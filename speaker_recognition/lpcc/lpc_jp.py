@@ -8,6 +8,7 @@ import numpy as np
 from pylab import *
 from scipy.io import wavfile
 
+
 def autocorr(x, nlags=None):
     """自己相関関数を求める
     x:     信号
@@ -22,6 +23,7 @@ def autocorr(x, nlags=None):
             r[lag] += x[n] * x[n + lag]
     return r
 
+
 def LevinsonDurbin(r, lpcOrder):
     """Levinson-Durbinのアルゴリズム
     k次のLPC係数からk+1次のLPC係数を再帰的に計算して
@@ -33,9 +35,9 @@ def LevinsonDurbin(r, lpcOrder):
 
     # k = 1の場合
     a[0] = 1.0
-    a[1] = - r[1] / r[0]
+    a[1] = -r[1] / r[0]
     e[1] = r[0] + r[1] * a[1]
-    lam = - r[1] / r[0]
+    lam = -r[1] / r[0]
 
     # kの場合からk+1の場合を再帰的に求める
     for k in range(1, lpcOrder):
@@ -62,17 +64,18 @@ def LevinsonDurbin(r, lpcOrder):
 
     return a, e[-1]
 
+
 if __name__ == "__main__":
     #original = np.zeros(128)
     #for i in range(len(original)):
-        #original[i] = np.sin(i * 0.01) + 0.75 * np.sin(i * 0.03) + 0.5 * np.sin(i * 0.05) + 0.25 * np.sin(i * 0.11)
+    #original[i] = np.sin(i * 0.01) + 0.75 * np.sin(i * 0.03) + 0.5 * np.sin(i * 0.05) + 0.25 * np.sin(i * 0.11)
     fs, original = wavfile.read("a.wav")
 
     #TODO
     from scikits.talkbox.linpred import levinson_lpc
     # print(levinson_lpc.lpc(original, 16))
 
-    lpcOrder = 16  # LPC係数の次数
+    lpcOrder = 16 # LPC係数の次数
 
     # 自己相関関数を計算
     # r[0]からr[lpcOrder]までlpcOrder+1個必要

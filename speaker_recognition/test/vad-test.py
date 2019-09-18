@@ -15,8 +15,10 @@ import scipy.io.wavfile as wavfile
 import VAD
 import matplotlib.pyplot as plt
 
+
 class Person(object):
-    def __init__(self, sample = None, name = None, gender = None):
+
+    def __init__(self, sample=None, name=None, gender=None):
         self.sample = sample
         self.name = name
         self.gender = gender
@@ -35,15 +37,16 @@ class Person(object):
     def get_fragment(self, duration):
         return self.sample.get_fragment(duration)
 
+
 def get_corpus():
     persons = defaultdict(Person)
     dirs = [
-            '../test-data/corpus/Style_Reading',
-            '../test-data/corpus/Style_Spontaneous',
-            '../test-data/corpus/Style_Whisper',
-            ]
+        '../test-data/corpus/Style_Reading',
+        '../test-data/corpus/Style_Spontaneous',
+        '../test-data/corpus/Style_Whisper',
+    ]
     for d in dirs:
-        print("processing {} ..." . format(d))
+        print("processing {} ...".format(d))
         for fname in glob.glob(os.path.join(d, "*.wav")):
             basename = os.path.basename(fname)
             gender, name, _ = basename.split('_')
@@ -52,13 +55,13 @@ def get_corpus():
             try:
                 p.add_sample(Sample.from_wavfile(fname))
             except Exception as e:
-                print("Exception occured while reading {}: {} " . format(
-                    fname, e))
+                print("Exception occured while reading {}: {} ".format(fname, e))
                 print("======= traceback =======")
                 print(traceback.format_exc())
                 print("=========================")
 
     return persons
+
 
 def play_wav(fname):
     import pyaudio
@@ -68,14 +71,11 @@ def play_wav(fname):
     chunk = 1024
 
     #open a wav format music
-    f = wave.open(fname,"rb")
+    f = wave.open(fname, "rb")
     #instantiate PyAudio
     p = pyaudio.PyAudio()
     #open stream
-    stream = p.open(format = p.get_format_from_width(f.getsampwidth()),
-                    channels = f.getnchannels(),
-                    rate = f.getframerate(),
-                    output = True)
+    stream = p.open(format=p.get_format_from_width(f.getsampwidth()), channels=f.getnchannels(), rate=f.getframerate(), output=True)
     #read data
     data = f.readframes(chunk)
 
@@ -100,20 +100,21 @@ def add_white_noise(signal):
         ret[i] += random.gauss(0, sd * 2)
     return ret
 
+
 def main():
-#    nr_person = 1
-#    persons = dict(list(get_corpus().iteritems())[:nr_person])
-#    person = list(persons.itervalues())[0]
-#    fs, signal = person.sample.fs, person.sample.signal
+    #    nr_person = 1
+    #    persons = dict(list(get_corpus().iteritems())[:nr_person])
+    #    person = list(persons.itervalues())[0]
+    #    fs, signal = person.sample.fs, person.sample.signal
 
     tmpfname = '/tmp/tmp.wav'
     fname = 'noise-test-2.wav'
     fs, signal = wavfile.read(fname)
-#    signal = add_white_noise(signal)
+    #    signal = add_white_noise(signal)
     plt.figure()
     plt.plot(arange(len(signal)) / float(fs), signal)
     plt.title('orignal signal')
-    plt.show(block = False)
+    plt.show(block=False)
 
     vad = VAD.VAD()
     fs, new_signal = vad.vad(fs, signal)
@@ -124,6 +125,7 @@ def main():
     plt.figure()
     plt.plot(new_signal)
     plt.show()
+
 
 #    plt.figure()
 #    plt.plot(new_signal)

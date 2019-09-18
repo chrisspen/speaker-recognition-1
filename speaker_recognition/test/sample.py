@@ -8,8 +8,10 @@ import scipy.io.wavfile as wavfile
 import numpy as np
 import random
 
+
 class Sample(object):
-    def __init__(self, fs = None, signal = None):
+
+    def __init__(self, fs=None, signal=None):
         if signal == None:
             signal = np.array([])
         self.signal = signal
@@ -27,7 +29,7 @@ class Sample(object):
 
     def add(self, sample):
         if self.fs:
-            assert sample.fs == self.fs, "{} != {}" . format(sample.fs, self.fs)
+            assert sample.fs == self.fs, "{} != {}".format(sample.fs, self.fs)
         else:
             self.fs = sample.fs
         self.signal = np.concatenate((self.signal, sample.signal))
@@ -52,11 +54,7 @@ class Sample(object):
         """begin and end in second"""
         assert begin <= end and end < self.duration()
         bpos, epos = begin * self.fs, end * self.fs
-        return self.fs, self.signal[bpos : epos]
-
-
-
+        return self.fs, self.signal[bpos:epos]
 
 
 # vim: foldmethod=marker
-

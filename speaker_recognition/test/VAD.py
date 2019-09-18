@@ -14,14 +14,15 @@ import matplotlib.pyplot as plt
 
 POWER_SPECTRUM_FLOOR = 1e-100
 
+
 class LTSV(object):
     """
     Long-Term Signal Variability
     """
-    def __init__(self, frame_duration = 0.02, frame_time_shift = 0.01,
-            nr_dft = 2048, verbose = False):
+
+    def __init__(self, frame_duration=0.02, frame_time_shift=0.01, nr_dft=2048, verbose=False):
         self.frame_duration = frame_duration
-        self.frame_time_shift = frame_time_shift;
+        self.frame_time_shift = frame_time_shift
         self.nr_dft = nr_dft
         self.verbose = verbose
 
@@ -38,8 +39,8 @@ class LTSV(object):
         print('compute:', K, k_start, k_end)
 
         if signal.ndim > 1:
-#            self.dprint("LTSV: Input signal has more than 1 channel; the channels will be averaged.")
-#            signal = mean(signal, axis=1)
+            #            self.dprint("LTSV: Input signal has more than 1 channel; the channels will be averaged.")
+            #            signal = mean(signal, axis=1)
             signal = array(zip(*signal)[0])
 
         frame_length = self.frame_duration * fs
@@ -57,7 +58,7 @@ class LTSV(object):
             frame_interval.append((frame_start_pos, frame_end_pos))
             frame = frame * window
 
-            S = abs(fft.fft(frame)[k_start : k_end]) ** 2
+            S = abs(fft.fft(frame)[k_start:k_end])**2
             S[S < POWER_SPECTRUM_FLOOR] = POWER_SPECTRUM_FLOOR # avoid zero
             Z = sum(S)
             s = S / Z
@@ -65,10 +66,8 @@ class LTSV(object):
             L.append(var(x))
             if False and mean(abs(S)) > 0 and frame_start_pos / float(fs) > 3:
                 fig, (ax1, ax2, ax3) = plt.subplots(3, 1)
-                ax1.plot((arange(len(frame)) + frame_start_pos) / float(fs),
-                        frame / window)
-                ax1.set_title('Signal {:.2f}s ~ {:.2f}s' . format(
-                    frame_start_pos / float(fs), frame_end_pos / float(fs)))
+                ax1.plot((arange(len(frame)) + frame_start_pos) / float(fs), frame / window)
+                ax1.set_title('Signal {:.2f}s ~ {:.2f}s'.format(frame_start_pos / float(fs), frame_end_pos / float(fs)))
                 nr_pt_plot = 10
                 ax2.plot(omega[:nr_pt_plot], s[:nr_pt_plot])
                 ax2.set_title('Spectrum')
@@ -84,13 +83,15 @@ class LTSV(object):
         if self.verbose:
             print(msg)
 
+
 class MonoQueue(object):
-    def __init__(self, size, greater = lambda a, b: a > b):
+
+    def __init__(self, size, greater=lambda a, b: a > b):
         self.queue = deque()
         self.size = size
         self.greater = greater
 
-    def append(self, ind, val = None):
+    def append(self, ind, val=None):
         if val == None:
             ind, val = ind
         if self.queue:
@@ -111,18 +112,24 @@ class MonoQueue(object):
     def __getitem__(self, ind):
         return self.queue[ind]
 
+
 class MonoMaxQueue(MonoQueue):
+
     def __init__(self, size):
         MonoQueue.__init__(self, size, lambda a, b: a > b)
 
+
 class MonoMinQueue(MonoQueue):
+
     def __init__(self, size):
         MonoQueue.__init__(self, size, lambda a, b: a < b)
+
 
 class VAD(object):
     """
     Voice Activity Dectection
     """
+
     def __init__(self, **kwargs):
         self.ltsv = LTSV(**kwargs)
         self.threshold_buffer_size = 100
@@ -139,8 +146,8 @@ class VAD(object):
     def vad(self, fs, signal):
         """ return fs, new_signal """
         if signal.ndim > 1:
-#            print("INFO: Input signal has more than 1 channel; the channels will be averaged.")
-#            signal = mean(signal, axis=1)
+            #            print("INFO: Input signal has more than 1 channel; the channels will be averaged.")
+            #            signal = mean(signal, axis=1)
             signal = array(zip(*signal)[0])
 
         print('signal length: ', len(signal))
@@ -182,8 +189,8 @@ class VAD(object):
             return max(buf)
 
         for i in range(self.threshold_buffer_size, len(L)):
-            B_speech_min = get_speech_min(D, L, i-self.threshold_buffer_size, i)
-            B_noise_max = get_noise_max(D, L, i-self.threshold_buffer_size, i)
+            B_speech_min = get_speech_min(D, L, i - self.threshold_buffer_size, i)
+            B_noise_max = get_noise_max(D, L, i - self.threshold_buffer_size, i)
 
 
             t0 = self.alpha * B_speech.front_val(i - 1) \
@@ -222,12 +229,12 @@ class VAD(object):
         for interval in speech_intervals:
             l, r = interval
             if l > cur_right:
-                new_signal.extend(list(signal[cur_left: cur_right]))
+                new_signal.extend(list(signal[cur_left:cur_right]))
                 cur_left, cur_right = l, r
             else:
                 cur_right = r
-        new_signal.extend(list(signal[cur_left: cur_right]))
+        new_signal.extend(list(signal[cur_left:cur_right]))
         return fs, signal # np.array(new_signal)
 
-# vim: foldmethod=marker
 
+# vim: foldmethod=marker

@@ -8,7 +8,9 @@ import os
 import numpy
 import pypr.clustering.gmm as pypr_GMM
 
+
 class UBM(object):
+
     def __init__(self, n_component, n_iter):
         self.n_comp = n_component
         self.n_iter = n_iter
@@ -54,6 +56,7 @@ class UBM(object):
                         ubm.add_sample(vec)
         ubm.fit()
         return ubm
+
 
 if __name__ == "__main__":
     ubm = UBM.train_from_file('feature-data/enroll.lst', 256, 100)

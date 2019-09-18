@@ -22,18 +22,17 @@ def get_training_data_fpaths():
         fpaths.append(fpath)
     return fpaths
 
+
 def main():
     nr_person = 50
     fpaths = get_training_data_fpaths()
     X_train, y_train, X_test, y_test = datautil.read_data(fpaths, nr_person)
     ubm = GMM.load('model/ubm-32.model')
     for x, y in zip(X_train, y_train):
-        gmm = GMM(concurrency=8,
-                threshold=0.01,
-                nr_iteration=100,
-                verbosity=1)
+        gmm = GMM(concurrency=8, threshold=0.01, nr_iteration=100, verbosity=1)
         gmm.fit(x, ubm=ubm)
         gmm.dump("model/" + y + ".32.model")
+
 
 if __name__ == '__main__':
     main()

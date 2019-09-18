@@ -17,7 +17,9 @@ from feature import BOB, LPC, MFCC, get_extractor
 from sample import Sample
 from multiprocess import MultiProcessWorker
 
+
 class Person(object):
+
     def __init__(self, sample=None, name=None, gender=None):
         self.sample = sample
         self.name = name
@@ -43,10 +45,11 @@ class Person(object):
     def remove_subsignal(self, begin, end):
         self.sample.remove_subsignal(begin, end)
 
+
 def get_corpus(dirs):
     ret = []
     for d in dirs:
-        print("processing {} ..." . format(d))
+        print("processing {} ...".format(d))
         for fname in sorted(glob.glob(os.path.join(d, "*.wav"))):
             basename = os.path.basename(fname)
             gender, name, _ = basename.split('_')
@@ -56,7 +59,7 @@ def get_corpus(dirs):
                 orig_sample = Sample.from_wavfile(fname)
                 p.add_sample(orig_sample)
             except Exception as e:
-                print("Exception occured while reading {}: {} " . format(fname, e))
+                print("Exception occured while reading {}: {} ".format(fname, e))
                 print("======= traceback =======")
                 print(traceback.format_exc())
                 print("=========================")
@@ -64,7 +67,9 @@ def get_corpus(dirs):
 
     return ret
 
+
 class DataSet(object):
+
     def __init__(self):
         """list item is of format (name, fs, signal)"""
         self.enroll = []
@@ -90,7 +95,6 @@ class DataSet(object):
         del worker
         return zip(names, rst)
 
-
     def write(self, dirname):
         print("Writing...")
         if not os.path.exists(dirname):
@@ -114,6 +118,7 @@ class DataSet(object):
         with open(os.path.join(dirname, task_name + ".lst"), 'w') as f:
             for line in datalist:
                 f.write("{0}={1}\n".format(line[0], line[1]))
+
 
 if __name__ == "__main__":
     nr_enroll = 30 #
@@ -143,4 +148,3 @@ if __name__ == "__main__":
 
     dataset.compute_features()
     dataset.write('feature-data')
-

@@ -23,12 +23,12 @@ from sklearn.mixture import GMM
 from feature import BOB, LPC, MFCC, get_extractor
 from sample import Sample
 
-
 concurrency = multiprocessing.cpu_count()
 
 
 class Person(object):
-    def __init__(self, sample = None, name = None, gender = None):
+
+    def __init__(self, sample=None, name=None, gender=None):
         self.sample = sample
         self.name = name
         self.gender = gender
@@ -58,7 +58,7 @@ def get_corpus(dirs):
     persons = defaultdict(Person)
 
     for d in dirs:
-        print("processing {} ..." . format(d))
+        print("processing {} ...".format(d))
         for fname in sorted(glob.glob(os.path.join(d, "*.wav"))):
             basename = os.path.basename(fname)
             gender, name, _ = basename.split('_')
@@ -68,16 +68,17 @@ def get_corpus(dirs):
                 orig_sample = Sample.from_wavfile(fname)
                 p.add_sample(orig_sample)
             except Exception as e:
-                print("Exception occured while reading {}: {} " . format(
-                    fname, e))
+                print("Exception occured while reading {}: {} ".format(fname, e))
                 print("======= traceback =======")
                 print(traceback.format_exc())
                 print("=========================")
 
     return persons
 
+
 class GMMSet(object):
-    def __init__(self, gmm_order = 32):
+
+    def __init__(self, gmm_order=32):
         self.gmms = []
         self.gmm_order = gmm_order
         self.y = []
@@ -103,19 +104,23 @@ class GMMSet(object):
 
     def gmm_score(self, gmm, x):
         return np.exp(np.sum(gmm.score(x)) / 1000)
+
     def predict_one(self, x):
         scores = [self.gmm_score(gmm, x) for gmm in self.gmms]
-        return self.y[max(enumerate(scores), key = operator.itemgetter(1))[0]]
+        return self.y[max(enumerate(scores), key=operator.itemgetter(1))[0]]
 
     def predict(self, X):
         return map(self.predict_one, X)
+
 
 def gen_data(params):
     p, duration = params
     return p.get_fragment(duration)
 
+
 def predict_task(gmmset, x_test):
     return gmmset.predict_one(x_test)
+
 
 def test_feature(feature_impl, X_train, y_train, X_test, y_test):
     start = time.time()
@@ -140,7 +145,7 @@ def test_feature(feature_impl, X_train, y_train, X_test, y_test):
     pool = multiprocessing.Pool(concurrency)
     predictions = []
     for x_test, label_true in zip(*(X_test, y_test)):
-        predictions.append(pool.apply_async(predict_task, args = (gmmset, x_test)))
+        predictions.append(pool.apply_async(predict_task, args=(gmmset, x_test)))
     pool.close()
     for ind, (x_test, label_true) in enumerate(zip(*(X_test, y_test))):
         label_pred = predictions[ind].get()
@@ -154,8 +159,7 @@ def test_feature(feature_impl, X_train, y_train, X_test, y_test):
 
 def main():
     if len(sys.argv) == 1:
-        print("Usage: {} <dir_contains_wav_file> [<dirs> ...]" . format(
-                sys.argv[0]))
+        print("Usage: {} <dir_contains_wav_file> [<dirs> ...]".format(sys.argv[0]))
         sys.exit(1)
 
     dirs = sys.argv[1:]
@@ -210,7 +214,7 @@ def main():
         sys.stdout = open(fname, 'a')
         for n_c in [20, 24, 28, 32, 36, 40]:
             print("n_ceps=19 MFCC NFILTER=55, WINL={0}".format(n_c))
-            test_feature(get_extractor(BOB.extract, win_length_ms=n_c, win_shift_ms=n_c/ 2), X_train, y_train, X_test, y_test)
+            test_feature(get_extractor(BOB.extract, win_length_ms=n_c, win_shift_ms=n_c / 2), X_train, y_train, X_test, y_test)
         sys.stdout.close()
 
     def test_lpc_win():
@@ -218,7 +222,7 @@ def main():
         sys.stdout = open(fname, 'a')
         for n_c in [20, 24, 28, 32, 36, 40]:
             print("n_dim=15 LPC WINL={0}".format(n_c))
-            test_feature(get_extractor(LPC.extract, win_length_ms=n_c, win_shift_ms=n_c/ 2), X_train, y_train, X_test, y_test)
+            test_feature(get_extractor(LPC.extract, win_length_ms=n_c, win_shift_ms=n_c / 2), X_train, y_train, X_test, y_test)
         sys.stdout.close()
 
     def test_lpc_dim():
@@ -228,7 +232,6 @@ def main():
             print("n_dim={} LPC WINL=32, WINS=16".format(n_c))
             test_feature(get_extractor(LPC.extract, n_lpc=n_c), X_train, y_train, X_test, y_test)
         sys.stdout.close()
-
 
     test_lpc_win()
     test_lpc_win()
@@ -245,12 +248,7 @@ def main():
     #test_feature(get_extractor(LPC.extract, diff=True), X_train, y_train, X_test, y_test)
 
 
-
-
-
 if __name__ == '__main__':
     main()
 
-
 # vim: foldmethod=marker
-

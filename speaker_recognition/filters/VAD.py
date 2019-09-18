@@ -7,6 +7,7 @@
 from .noisered import NoiseReduction
 from .ltsd import LTSD_VAD
 
+
 class VAD:
 
     def __init__(self):
@@ -24,12 +25,13 @@ class VAD:
     def filter(self, fs, signal):
         if not self.initted:
             raise "NoiseFilter Not Initialized"
+
+
 #        nred = self.nr.filter(fs, signal)
 #        removed = remove_silence(fs, nred)
 #        self.ltsd.plot_ltsd(fs, nred)
         filtered, intervals = self.ltsd.filter(signal)
         return filtered, intervals
-
 
 if __name__ == "__main__":
     from scipy.io import wavfile

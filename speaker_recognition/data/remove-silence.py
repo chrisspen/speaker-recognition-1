@@ -12,17 +12,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 import multiprocessing
 
+
 def mkdirp(dirname):
     try:
         os.makedirs(dirname)
     except OSError as err:
-        if err.errno!=17:
+        if err.errno != 17:
             raise
 
-def remove_silence(fs, signal,
-        frame_duration = 0.02,
-        frame_shift = 0.01,
-        perc = 0.01):
+
+def remove_silence(fs, signal, frame_duration=0.02, frame_shift=0.01, perc=0.01):
     orig_dtype = type(signal[0])
     typeinfo = np.iinfo(orig_dtype)
     is_unsigned = typeinfo.min >= 0
@@ -31,7 +30,7 @@ def remove_silence(fs, signal,
         signal = signal - typeinfo.max / 2
 
     siglen = len(signal)
-    retsig = np.zeros(siglen, dtype = np.int64)
+    retsig = np.zeros(siglen, dtype=np.int64)
     frame_length = frame_duration * fs
     frame_shift_length = frame_shift * fs
     new_siglen = 0
@@ -42,10 +41,10 @@ def remove_silence(fs, signal,
     #           [128, 127, 129] ** 2 = [0, 1, 1]
     #       so the energy of the signal is somewhat
     #       right
-    average_energy = np.sum(signal ** 2) / float(siglen)
+    average_energy = np.sum(signal**2) / float(siglen)
     while i < siglen:
         subsig = signal[i:i + frame_length]
-        ave_energy = np.sum(subsig ** 2) / float(len(subsig))
+        ave_energy = np.sum(subsig**2) / float(len(subsig))
         if ave_energy < average_energy * perc:
             i += frame_length
         else:
@@ -58,15 +57,17 @@ def remove_silence(fs, signal,
         retsig = retsig + typeinfo.max / 2
     return fs, retsig.astype(orig_dtype)
 
+
 def task(fpath, new_fpath):
     fs, signal = wavfile.read(fpath)
     fs_out, signal_out = remove_silence(fs, signal)
     wavfile.write(new_fpath, fs_out, signal_out)
     return fpath
 
+
 def main():
     if len(sys.argv) != 3:
-        print("Usage: {} <orignal_dir> <output_dir>" . format(sys.argv[0]))
+        print("Usage: {} <orignal_dir> <output_dir>".format(sys.argv[0]))
         sys.exit(1)
 
     ORIG_DIR, OUTPUT_DIR = sys.argv[1:]
@@ -78,13 +79,13 @@ def main():
             fname = os.path.basename(fpath)
             new_fpath = os.path.join(OUTPUT_DIR, dirname, fname)
             mkdirp(os.path.dirname(new_fpath))
-            result.append(pool.apply_async(task, args = (fpath, new_fpath)))
+            result.append(pool.apply_async(task, args=(fpath, new_fpath)))
     pool.close()
     for r in result:
         print(r.get())
+
 
 if __name__ == '__main__':
     main()
 
 # vim: foldmethod=marker
-

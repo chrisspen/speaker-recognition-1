@@ -6,11 +6,12 @@
 
 import time
 import numpy as np
-from scipy.io import  wavfile
+from scipy.io import wavfile
 
 # lpc order
 n_lpc = 10
 n_lpcc = 14
+
 
 def lpc_to_cc(lpc):
     lpcc = np.zeros(n_lpcc)
@@ -25,12 +26,14 @@ def lpc_to_cc(lpc):
             lpcc[n] += lpc[l] * lpcc[n - l] * (n - l) / n
     return -lpcc[1:]
 
+
 def lpcc(signal):
     #TODO
     from scikits.talkbox.linpred import levinson_lpc
     lpc = levinson_lpc.lpc(signal, n_lpc)[0]
     lpcc = lpc_to_cc(lpc)
     return lpcc
+
 
 def main():
     fs, signal = wavfile.read("./a.wav")
@@ -41,4 +44,4 @@ def main():
 
 
 if __name__ == "__main__":
-   main()
+    main()

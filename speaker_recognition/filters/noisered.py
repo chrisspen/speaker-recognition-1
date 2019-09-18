@@ -16,6 +16,8 @@ NOISE_WAV = "/tmp/noise.wav"
 NOISE_MODEL = "/tmp/noise.prof"
 THRES = 0.21
 r = Random()
+
+
 class NoiseReduction(object):
 
     def init_noise(self, fs, signal):
@@ -28,8 +30,7 @@ class NoiseReduction(object):
         signal = monophonic(signal)
         wavfile.write(fname, fs, signal)
         fname_clean = "/tmp/tmp{0}-clean.wav".format(rand)
-        os.system("sox {0} {1} noisered {2} {3}".format(fname, fname_clean,
-                                                        NOISE_MODEL, THRES))
+        os.system("sox {0} {1} noisered {2} {3}".format(fname, fname_clean, NOISE_MODEL, THRES))
         fs, signal = wavfile.read(fname_clean)
         signal = monophonic(signal)
 

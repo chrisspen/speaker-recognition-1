@@ -17,7 +17,8 @@ from .feature import mix_feature
 from .filters.VAD import VAD
 from .skgmm import GMMSet, GMM
 
-CHECK_ACTIVE_INTERVAL = 1       # seconds
+CHECK_ACTIVE_INTERVAL = 1 # seconds
+
 
 class ModelInterface(object):
 
@@ -123,6 +124,7 @@ class ModelInterface(object):
             R = pickle.load(f)
             R.gmmset.after_pickle()
             return R
+
 
 if __name__ == "__main__":
     """ some testing"""

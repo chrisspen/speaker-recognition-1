@@ -12,15 +12,17 @@ import argparse
 from numpy import *
 import numpy as np
 
+
 class GassianTypeNotImplemented(Exception):
     pass
 
+
 def get_args():
     description = 'plot gmm'
-    parser = argparse.ArgumentParser(description = description)
+    parser = argparse.ArgumentParser(description=description)
 
-    parser.add_argument('-i', '--input', help = 'data file', required = True)
-    parser.add_argument('-m', '--model', help = 'model file', required = True)
+    parser.add_argument('-i', '--input', help='data file', required=True)
+    parser.add_argument('-m', '--model', help='model file', required=True)
 
     args = parser.parse_args()
 
@@ -28,6 +30,7 @@ def get_args():
 
 
 class Gaussian(object):
+
     def __init__(self):
         self.covtype = 1
         self.dim = 0
@@ -42,14 +45,16 @@ class Gaussian(object):
 
 
 class GMM(object):
+
     def __init__(self):
         self.nr_mixtures = 0
         self.weights = array([])
         self.gaussians = []
 
+
 def read_data(fname):
     with open(fname) as fin:
-        return zip(*map( lambda line: map(float, line.rstrip().split()), fin))
+        return zip(*map(lambda line: map(float, line.rstrip().split()), fin))
 
 
 def read_gaussian(fin):
@@ -64,6 +69,7 @@ def read_gaussian(fin):
         raise GassianTypeNotImplemented()
     return gaussian
 
+
 def read_model(fname):
     gmm = GMM()
     with open(fname) as fin:
@@ -74,14 +80,15 @@ def read_model(fname):
 
     return gmm
 
+
 def main():
     args = get_args()
     data = read_data(args.input)
     x, y = data[:2]
-    gmm =  read_model(args.model)
+    gmm = read_model(args.model)
 
     fig = plt.figure()
-    ax = fig.add_subplot(111, aspect = 'equal')
+    ax = fig.add_subplot(111, aspect='equal')
     ax.scatter(x, y)
     x0, x1, y0, y1 = ax.axis()
 
@@ -90,15 +97,14 @@ def main():
     X, Y = meshgrid(x, y)
 
     def get_Z(X, Y, gaussian):
-        return mlab.bivariate_normal(X, Y, gaussian.sigma[0], gaussian.sigma[1],
-                gaussian.mean[0], gaussian.mean[1], 0)
+        return mlab.bivariate_normal(X, Y, gaussian.sigma[0], gaussian.sigma[1], gaussian.mean[0], gaussian.mean[1], 0)
 
     Z = get_Z(X, Y, gmm.gaussians[0])
     for gaussian in gmm.gaussians[1:]:
         Z += get_Z(X, Y, gaussian)
     plt.contour(X, Y, Z, cmap=cm.PuBu_r)
     for gaussian in gmm.gaussians:
-        plt.scatter(gaussian.mean[0], gaussian.mean[1], s = 50, c = 'yellow')
+        plt.scatter(gaussian.mean[0], gaussian.mean[1], s=50, c='yellow')
 
     plt.show()
 
@@ -106,6 +112,4 @@ def main():
 if __name__ == '__main__':
     main()
 
-
 # vim: foldmethod=marker
-

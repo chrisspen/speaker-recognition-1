@@ -1,6 +1,3 @@
-
-
-
 #!/usr/bin/env python2
 # -*- coding: UTF-8 -*-
 # File: __init__.py
@@ -17,10 +14,14 @@ except Exception as e:
 from . import LPC
 import numpy as np
 
+
 def get_extractor(extract_func, **kwargs):
+
     def f(tup):
         return extract_func(*tup, **kwargs)
+
     return f
+
 
 def mix_feature(tup):
     mfcc = MFCC.extract(tup)
