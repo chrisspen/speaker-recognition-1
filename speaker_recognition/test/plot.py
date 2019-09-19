@@ -40,7 +40,7 @@ def get_plot_data(mfcc, ind, pieces=20):
         val = int(v * pieces) / float(pieces)
         cnt[val] += 1
     xs, ys = [], []
-    for val, num in sorted(cnt.iteritems()):
+    for val, num in sorted(cnt.items()):
         xs.append(val)
         ys.append(num)
     return xs, ys

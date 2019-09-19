@@ -48,7 +48,9 @@ Examples:
 
 def task_enroll(input_dirs, output_model):
     m = ModelInterface()
-    input_dirs = [os.path.expanduser(k) for k in input_dirs.strip().split()]
+    if isinstance(input_dirs, str):
+        input_dirs = input_dirs.strip().split()
+    input_dirs = [os.path.expanduser(k) for k in input_dirs]
     dirs = itertools.chain(*(glob.glob(d) for d in input_dirs))
     dirs = [d for d in dirs if os.path.isdir(d)]
     files = []
@@ -56,7 +58,9 @@ def task_enroll(input_dirs, output_model):
         print("No valid directory found!")
         sys.exit(1)
     training_stats = []
-    for d in dirs:
+    total_dirs = len(dirs)
+    for i, d in enumerate(dirs):
+        print('Processing directory %i of %i...' % (i+1, total_dirs))
         label = os.path.basename(d.rstrip('/'))
 
         wavs = glob.glob(d + '/*.wav')
@@ -65,9 +69,11 @@ def task_enroll(input_dirs, output_model):
             continue
         print("Label '{0}' has files: {1}".format(label, ', '.join(wavs)))
         total_len = 0
-        for wav in wavs:
+        total_wavs = len(wavs)
+        for j, wav in enumerate(wavs):
             fs, signal = read_wav(wav)
-            print("   File '{}' has frequency={} and length={}".format(wav, fs, len(signal)))
+            print("   Processing directory {} of {}, file {} of {}: '{}' has frequency={} and length={}"\
+                .format(i+1, total_dirs, j+1, total_wavs, wav, fs, len(signal)))
             total_len += len(signal)
             m.enroll(label, fs, signal)
             m.enroll(UBM_LABEL, fs, signal)
@@ -83,13 +89,24 @@ def task_enroll(input_dirs, output_model):
 
 def task_predict(input_files, input_model):
     m = ModelInterface.load(input_model)
-    for f in glob.glob(os.path.expanduser(input_files)):
+    if isinstance(input_files, str):
+        input_files = input_files.strip().split()
+    input_files = [os.path.expanduser(k) for k in input_files]
+    results = []
+    total_files = len(input_files)
+    for i, f in enumerate(input_files):
+        print('Predicting file %s: %i of %i...' % (f, i+1, total_files))
         fs, signal = read_wav(f)
-        scores = m.predict_scores(fs, signal)
-        y_scores = dict(zip(m.gmmset.y, scores))
-        print(f, '->')
-        for label, score in sorted(y_scores.items(), key=lambda o: o[1], reverse=True):
-            print(score, label)
+        # scores = m.predict_scores(fs, signal)
+        best = m.predict(fs, signal)
+        print('Prediction:', best)
+        results.append(best)
+        # y_scores = dict(zip(m.gmmset.y, scores))
+        # print(f, '->')
+        # for label, score in sorted(y_scores.items(), key=lambda o: o[1], reverse=True):
+            # print(score, label)
+            # results.append((f, label, score))
+    return results
 
 
 if __name__ == '__main__':

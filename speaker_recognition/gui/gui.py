@@ -449,7 +449,7 @@ class Main(QMainWindow):
         return self.defaultimage
 
     def printDebug(self):
-        for name, feat in self.backend.features.iteritems():
+        for name, feat in self.backend.features.items():
             print(name, len(feat))
         print("GMMs")
         print(len(self.backend.gmmset.gmms))

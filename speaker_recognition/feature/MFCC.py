@@ -53,7 +53,8 @@ class MFCCExtractor:
             self.dprint("INFO: Input signal has more than 1 channel; the channels will be averaged.")
             signal = mean(signal, axis=1)
         assert len(signal) > 5 * self.FRAME_LEN, "Signal too short!"
-        frames = (len(signal) - self.FRAME_LEN) / self.FRAME_SHIFT + 1
+        frames = int((len(signal) - self.FRAME_LEN) / self.FRAME_SHIFT + 1)
+        print('frames:', frames)
         feature = []
         for f in range(frames):
             # Windowing
@@ -61,7 +62,7 @@ class MFCCExtractor:
             # Pre-emphasis
             frame[1:] -= frame[:-1] * self.PRE_EMPH
             # Power spectrum
-            X = abs(fft.fft(frame, self.FFT_SIZE)[:self.FFT_SIZE / 2 + 1])**2
+            X = abs(fft.fft(frame, self.FFT_SIZE)[:int(self.FFT_SIZE / 2 + 1)])**2
             X[X < POWER_SPECTRUM_FLOOR] = POWER_SPECTRUM_FLOOR # Avoid zero
             # Mel filtering, logarithm, DCT
             X = dot(self.D, log(dot(self.M, X)))

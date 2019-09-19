@@ -44,7 +44,7 @@ class GMMSet:
         for ind, x in enumerate(X):
             label = y[ind]
             Xtmp[label].extend(x)
-        yp, Xp = zip(*Xtmp.iteritems())
+        yp, Xp = zip(*Xtmp.items())
         return Xp, yp
 
     def fit(self, X, y):

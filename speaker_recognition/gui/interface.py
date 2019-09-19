@@ -73,7 +73,7 @@ class ModelInterface:
         self.gmmset = self._get_gmm_set()
         start = time.time()
         print("Start training...")
-        for name, feats in self.features.iteritems():
+        for name, feats in self.features.items():
             self.gmmset.fit_new(feats, name)
         print(time.time() - start, " seconds")
 
@@ -113,7 +113,7 @@ class ModelInterface:
     def dump(self, fname):
         """ dump all models to file"""
         self.gmmset.before_pickle()
-        with open(fname, 'w') as f:
+        with open(fname, 'wb') as f:
             pickle.dump(self, f, -1)
         self.gmmset.after_pickle()
 

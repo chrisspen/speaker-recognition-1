@@ -68,7 +68,7 @@ class GMM:
     def dumps(self):
         tmp_file = "/tmp/tmp-gmm.dump"
         self.dump(tmp_file)
-        f = open(tmp_file, 'r')
+        f = open(tmp_file, 'r')#TODO:rb?
         s = f.read()
         f.close()
         return s

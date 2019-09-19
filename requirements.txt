@@ -5,7 +5,7 @@ pyssp>=0.1.9.6
 PyAudio>=0.2.11
 h5py>=2.10.0
 #TODO:remove? scikits.talkbox is abandoned and not Python3.* compatible
-scikits.talkbox>=0.2.5
+#scikits.talkbox>=0.2.5
 tools>=0.1.9
 bob.extension
 bob.blitz

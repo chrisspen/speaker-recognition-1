@@ -71,10 +71,6 @@ if __name__ == "__main__":
     #original[i] = np.sin(i * 0.01) + 0.75 * np.sin(i * 0.03) + 0.5 * np.sin(i * 0.05) + 0.25 * np.sin(i * 0.11)
     fs, original = wavfile.read("a.wav")
 
-    #TODO
-    from scikits.talkbox.linpred import levinson_lpc
-    # print(levinson_lpc.lpc(original, 16))
-
     lpcOrder = 16 # LPC係数の次数
 
     # 自己相関関数を計算

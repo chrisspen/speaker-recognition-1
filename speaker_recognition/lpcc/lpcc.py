@@ -29,8 +29,10 @@ def lpc_to_cc(lpc):
 
 def lpcc(signal):
     #TODO
-    from scikits.talkbox.linpred import levinson_lpc
-    lpc = levinson_lpc.lpc(signal, n_lpc)[0]
+    # from scikits.talkbox.linpred import levinson_lpc
+    from ..feature.LPC import lpc2
+    # lpc = levinson_lpc.lpc(signal, n_lpc)[0]
+    lpc = lpc2(signal, n_lpc)[0]
     lpcc = lpc_to_cc(lpc)
     return lpcc
 

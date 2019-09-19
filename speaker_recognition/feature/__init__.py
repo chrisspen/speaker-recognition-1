@@ -28,6 +28,6 @@ def get_extractor(extract_func, **kwargs):
 def mix_feature(tup):
     mfcc = MFCC.extract(tup)
     lpc = LPC.extract(tup)
-    if not mfcc:
+    if not np.any(mfcc):
         print("ERROR.. failed to extract mfcc feature:", len(tup[1]), file=sys.stderr)
     return np.concatenate((mfcc, lpc), axis=1)

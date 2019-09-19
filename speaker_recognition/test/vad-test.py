@@ -102,10 +102,6 @@ def add_white_noise(signal):
 
 
 def main():
-    #    nr_person = 1
-    #    persons = dict(list(get_corpus().iteritems())[:nr_person])
-    #    person = list(persons.itervalues())[0]
-    #    fs, signal = person.sample.fs, person.sample.signal
 
     tmpfname = '/tmp/tmp.wav'
     fname = 'noise-test-2.wav'

@@ -41,7 +41,7 @@ class GMMSet:
         for ind, x in enumerate(X):
             label = y[ind]
             Xtmp[label].extend(x)
-        yp, Xp = zip(*Xtmp.iteritems())
+        yp, Xp = zip(*Xtmp.items())
         return Xp, yp
 
     def auto_tune_parameter(self, X, y):
@@ -91,7 +91,7 @@ class GMMSet:
     def load_gmm(self, label, fname):
         self.y.append(label)
         gmm = GMM.load(fname)
-        for key, val in self.kwargs.iteritems():
+        for key, val in self.kwargs.items():
             exec("gmm.{0} = val".format(key))
         self.gmms.append(gmm)
 
