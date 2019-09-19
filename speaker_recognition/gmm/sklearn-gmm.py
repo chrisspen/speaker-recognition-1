@@ -7,6 +7,7 @@
 # from sklearn.mixture import GMM
 from sklearn.mixture import GaussianMixture as GMM
 
+
 def read_data(fname):
     with open(fname) as fin:
         return map(lambda line: map(float, line.rstrip().split()), fin)

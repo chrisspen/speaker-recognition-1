@@ -11,6 +11,7 @@ from .utils import cached_func, diff_feature
 
 POWER_SPECTRUM_FLOOR = 1e-100
 
+
 def hamming(n): # pylint: disable=function-redefined
     """ Generate a hamming window of n points as a numpy array.  """
     return 0.54 - 0.46 * cos(2 * pi / n * (arange(n) + 0.5))

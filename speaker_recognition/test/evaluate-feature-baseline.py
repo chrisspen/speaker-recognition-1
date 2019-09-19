@@ -25,6 +25,7 @@ from .sample import Sample
 
 concurrency = multiprocessing.cpu_count()
 
+
 class GMMSet:
 
     def __init__(self, gmm_order=32):

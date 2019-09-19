@@ -30,6 +30,7 @@ NAMELIST = ['Nobody']
 
 last_label_to_show = None
 
+
 class RecorderThread(QThread):
 
     def __init__(self, main):
@@ -291,7 +292,6 @@ class Main(QMainWindow):
             self.warn("Please Input Your Name")
             return
 
-
         new_signal = self.backend.filter(*self.enrollWav)
         print("After removed: {0} -> {1}".format(len(self.enrollWav[1]), len(new_signal)))
         print("Enroll: {:.4f} seconds".format(float(len(new_signal)) / Main.FS))
@@ -455,15 +455,15 @@ class Main(QMainWindow):
         print(len(self.backend.gmmset.gmms))
 
     # def TempButton(self):
-        # import random
-        # randomnamelist = ["ltz","wyx","zxy","Nobody"]
-        # while self.newname == self.lastname:
-            # self.newname = randomnamelist[int(random.randrange(0,len(randomnamelist)))]
-        # NAMELIST.append(self.newname)
-        # self.lastname = self.newname
+    # import random
+    # randomnamelist = ["ltz","wyx","zxy","Nobody"]
+    # while self.newname == self.lastname:
+    # self.newname = randomnamelist[int(random.randrange(0,len(randomnamelist)))]
+    # NAMELIST.append(self.newname)
+    # self.lastname = self.newname
 
     # def LogButton(self):
-        # self.graphwindow.wid.reset()
+    # self.graphwindow.wid.reset()
 
 
 class GraphWindow(QWidget):
@@ -511,10 +511,10 @@ class BurningWidget(QtGui.QWidget):
         self.colorlist = [QColor(255, 102, 102), QColor(255, 255, 0), QColor(51, 153, 204), QColor(0, 153, 51), QColor(0, 255, 255)]
 
         # with open("timeline.txt") as db:
-            # for line in db:
-                # tmp = line.split()
-                # self.namelist.append(tmp[0])
-                # self.num.append(int(tmp[1]))
+        # for line in db:
+        # tmp = line.split()
+        # self.namelist.append(tmp[0])
+        # self.num.append(int(tmp[1]))
 
         self.namelistlen = 0
         self.nameset = []
@@ -653,15 +653,15 @@ class BurningWidget(QtGui.QWidget):
         qp.setBrush(QtCore.Qt.NoBrush)
 
         # for i in range(0,len(NAMELIST)):
-            # qp.drawLine(i, 0, i, 5)
-            # metrics = qp.fontMetrics()
-            # fw = metrics.width(str(self.num[i]))
-            # if not i:
-                # qp.drawText(0, 150, str(NAMELIST[i]))
-                # qp.drawText(0, 150 - 15, str(self.num[i]))
-            # else :
-                # qp.drawText((int(self.num[i - 1]) * zoomer)-fw/2, 150, str(NAMELIST[i]))
-                # qp.drawText((int(self.num[i - 1]) * zoomer)-fw/2, 150 - 15, str(self.num[i]))
+        # qp.drawLine(i, 0, i, 5)
+        # metrics = qp.fontMetrics()
+        # fw = metrics.width(str(self.num[i]))
+        # if not i:
+        # qp.drawText(0, 150, str(NAMELIST[i]))
+        # qp.drawText(0, 150 - 15, str(self.num[i]))
+        # else :
+        # qp.drawText((int(self.num[i - 1]) * zoomer)-fw/2, 150, str(NAMELIST[i]))
+        # qp.drawText((int(self.num[i - 1]) * zoomer)-fw/2, 150 - 15, str(self.num[i]))
 
 
 if __name__ == "__main__":

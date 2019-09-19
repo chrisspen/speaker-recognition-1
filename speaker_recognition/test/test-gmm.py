@@ -25,6 +25,7 @@ from .sample import Sample
 
 concurrency = multiprocessing.cpu_count()
 
+
 class Person:
 
     def __init__(self, sample=None, name=None, gender=None):

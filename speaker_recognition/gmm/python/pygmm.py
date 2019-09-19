@@ -27,6 +27,7 @@ COVTYPE_SPHEREICAL = 0
 COVTYPE_DIAGONAL = 1
 COVTYPE_FULL = 2
 
+
 class GMM:
     gmm = None
 
