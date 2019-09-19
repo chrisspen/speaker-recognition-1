@@ -4,20 +4,19 @@
 # Date: Wed Dec 25 20:26:12 2013 +0800
 # Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
-POWER_SPECTRUM_FLOOR = 1e-100
-
 from numpy import *
 import numpy.linalg as linalg
 
 from .utils import cached_func, diff_feature
 
+POWER_SPECTRUM_FLOOR = 1e-100
 
-def hamming(n):
+def hamming(n): # pylint: disable=function-redefined
     """ Generate a hamming window of n points as a numpy array.  """
     return 0.54 - 0.46 * cos(2 * pi / n * (arange(n) + 0.5))
 
 
-class MFCCExtractor(object):
+class MFCCExtractor:
 
     def __init__(self, fs, win_length_ms, win_shift_ms, FFT_SIZE, n_bands, n_coefs, PRE_EMPH, verbose=False):
         self.PRE_EMPH = PRE_EMPH
@@ -55,7 +54,7 @@ class MFCCExtractor(object):
         assert len(signal) > 5 * self.FRAME_LEN, "Signal too short!"
         frames = (len(signal) - self.FRAME_LEN) / self.FRAME_SHIFT + 1
         feature = []
-        for f in xrange(frames):
+        for f in range(frames):
             # Windowing
             frame = signal[f * self.FRAME_SHIFT:f * self.FRAME_SHIFT + self.FRAME_LEN] * self.window
             # Pre-emphasis
@@ -94,10 +93,10 @@ class MFCCExtractor(object):
         fp = floor(pf)
         pm = pf - fp
         M = zeros((self.n_bands, 1 + fn2))
-        for c in xrange(b2 - 1, b4):
+        for c in range(b2 - 1, b4):
             r = int(fp[c] - 1)
             M[r, c + 1] += 2 * (1 - pm[c])
-        for c in xrange(b3):
+        for c in range(b3):
             r = int(fp[c])
             M[r, c + 1] += 2 * pm[c]
         return M, CF
@@ -117,10 +116,10 @@ def get_mfcc_extractor(fs, win_length_ms=32, win_shift_ms=16, FFT_SIZE=2048, n_f
     return ret
 
 
-def extract(fs, signal=None, diff=False, **kwargs):
+def extract(fs, signal=None, diff=False, **kwargs): # pylint: disable=function-redefined
     """accept two argument, or one as a tuple"""
     if signal is None:
-        assert type(fs) == tuple
+        assert isinstance(fs, tuple)
         fs, signal = fs[0], fs[1]
     signal = cast['float'](signal)
     ret = get_mfcc_extractor(fs, **kwargs).extract(signal)

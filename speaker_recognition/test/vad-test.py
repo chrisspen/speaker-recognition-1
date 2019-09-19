@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # $File: vad-test.py
 # $Date: Sun Nov 24 21:35:13 2013 +0800
@@ -16,7 +16,7 @@ import VAD
 import matplotlib.pyplot as plt
 
 
-class Person(object):
+class Person:
 
     def __init__(self, sample=None, name=None, gender=None):
         self.sample = sample

@@ -10,22 +10,25 @@ import os.path
 import glob
 import traceback
 import time
+
 import numpy as np
-from PyQt4 import uic
 from scipy.io import wavfile
+from PyQt4 import uic
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4 import QtCore, QtGui
-
 import pyaudio
 
 from .utils import read_wav, write_wav, time_str, monophonic
 from .interface import ModelInterface
 
+# pylint: disable=undefined-variable
+
 FORMAT = pyaudio.paInt16
 NPDtype = 'int16'
 NAMELIST = ['Nobody']
 
+last_label_to_show = None
 
 class RecorderThread(QThread):
 
@@ -122,7 +125,7 @@ class Main(QMainWindow):
         try:
             fs, signal = read_wav("bg.wav")
             self.backend.init_noise(fs, signal)
-        except:
+        except Exception:
             pass
 
     ############ RECORD
@@ -204,7 +207,7 @@ class Main(QMainWindow):
         #ADD FOR GRAPH
         if label_to_show is None:
             label_to_show = 'Nobody'
-        if len(NAMELIST) and NAMELIST[-1] != label_to_show:
+        if NAMELIST and NAMELIST[-1] != label_to_show:
             NAMELIST.append(label_to_show)
         self.convUsername.setText(label_to_show)
         self.Alading_conv.setPixmap(QPixmap(u"image/a_result.png"))
@@ -289,11 +292,10 @@ class Main(QMainWindow):
             return
 
 
-#        self.addUserInfo()
         new_signal = self.backend.filter(*self.enrollWav)
         print("After removed: {0} -> {1}".format(len(self.enrollWav[1]), len(new_signal)))
         print("Enroll: {:.4f} seconds".format(float(len(new_signal)) / Main.FS))
-        if len(new_signal) == 0:
+        if not new_signal:
             print("Error! Input is silent! Please enroll again")
             return
         self.backend.enroll(name, Main.FS, new_signal)
@@ -366,6 +368,7 @@ class Main(QMainWindow):
         self.Userimage.setPixmap(self.defaultimage)
 
     def addUserInfo(self):
+        user = None
         for user in self.userdata:
             if user[0] == unicode(self.Username.displayText()):
                 return
@@ -376,7 +379,7 @@ class Main(QMainWindow):
             newuser.append('F')
         else:
             newuser.append('M')
-        if self.avatarname:
+        if user and self.avatarname:
             shutil.copy(self.avatarname, 'avatar/' + user[0] + '.jpg')
         self.userdata.append(newuser)
         self.writeuserdata()
@@ -443,8 +446,7 @@ class Main(QMainWindow):
         p = self.avatars.get(str(username), None)
         if p:
             return p
-        else:
-            return self.defaultimage
+        return self.defaultimage
 
     def printDebug(self):
         for name, feat in self.backend.features.iteritems():
@@ -452,18 +454,16 @@ class Main(QMainWindow):
         print("GMMs")
         print(len(self.backend.gmmset.gmms))
 
-    '''
-    def TempButton(self):
-        import random
-        randomnamelist = ["ltz","wyx","zxy","Nobody"]
-        while self.newname == self.lastname:
-            self.newname = randomnamelist[int(random.randrange(0,len(randomnamelist)))]
-        NAMELIST.append(self.newname)
-        self.lastname = self.newname
+    # def TempButton(self):
+        # import random
+        # randomnamelist = ["ltz","wyx","zxy","Nobody"]
+        # while self.newname == self.lastname:
+            # self.newname = randomnamelist[int(random.randrange(0,len(randomnamelist)))]
+        # NAMELIST.append(self.newname)
+        # self.lastname = self.newname
 
-    def LogButton(self):
-        self.graphwindow.wid.reset()
-    '''
+    # def LogButton(self):
+        # self.graphwindow.wid.reset()
 
 
 class GraphWindow(QWidget):
@@ -509,14 +509,13 @@ class BurningWidget(QtGui.QWidget):
         self.num = []
         self.Unknowncolor = QColor(204, 204, 204)
         self.colorlist = [QColor(255, 102, 102), QColor(255, 255, 0), QColor(51, 153, 204), QColor(0, 153, 51), QColor(0, 255, 255)]
-        '''
-        with open("timeline.txt") as db:
-            for line in db:
-                tmp = line.split()
-                self.namelist.append(tmp[0])
-                self.num.append(int(tmp[1]))
 
-        '''
+        # with open("timeline.txt") as db:
+            # for line in db:
+                # tmp = line.split()
+                # self.namelist.append(tmp[0])
+                # self.num.append(int(tmp[1]))
+
         self.namelistlen = 0
         self.nameset = []
         self.timer = QTimer(self)
@@ -550,8 +549,7 @@ class BurningWidget(QtGui.QWidget):
         second = totalsec % 60
         if second < 10:
             return str(minute) + ":0" + str(second)
-        else:
-            return str(minute) + ":" + str(second)
+        return str(minute) + ":" + str(second)
 
     def paintEvent(self, e):
 
@@ -570,8 +568,7 @@ class BurningWidget(QtGui.QWidget):
         p = self.avatars.get(str(username), None)
         if p:
             return p
-        else:
-            return self.defaultimage
+        return self.defaultimage
 
     def drawWidget(self, qp):
 
@@ -619,7 +616,7 @@ class BurningWidget(QtGui.QWidget):
         font = QtGui.QFont('Arial', 12, QtGui.QFont.Light)
         qp.setFont(font)
 
-        for i in range(0, len(NAMELIST)):
+        for i in enumerate(NAMELIST):
             outside = QPen(QColor(255, 255, 255))
             inside = QPen(QColor(0, 0, 0))
             outside.setWidth(4)
@@ -654,18 +651,17 @@ class BurningWidget(QtGui.QWidget):
 
         qp.setPen(pen)
         qp.setBrush(QtCore.Qt.NoBrush)
-        '''
-        for i in range(0,len(NAMELIST)):
-            qp.drawLine(i, 0, i, 5)
-            metrics = qp.fontMetrics()
-            fw = metrics.width(str(self.num[i]))
-            if not i:
-                qp.drawText(0, 150, str(NAMELIST[i]))
-                qp.drawText(0, 150 - 15, str(self.num[i]))
-            else :
-                qp.drawText((int(self.num[i - 1]) * zoomer)-fw/2, 150, str(NAMELIST[i]))
-                qp.drawText((int(self.num[i - 1]) * zoomer)-fw/2, 150 - 15, str(self.num[i]))
-        '''
+
+        # for i in range(0,len(NAMELIST)):
+            # qp.drawLine(i, 0, i, 5)
+            # metrics = qp.fontMetrics()
+            # fw = metrics.width(str(self.num[i]))
+            # if not i:
+                # qp.drawText(0, 150, str(NAMELIST[i]))
+                # qp.drawText(0, 150 - 15, str(self.num[i]))
+            # else :
+                # qp.drawText((int(self.num[i - 1]) * zoomer)-fw/2, 150, str(NAMELIST[i]))
+                # qp.drawText((int(self.num[i - 1]) * zoomer)-fw/2, 150 - 15, str(self.num[i]))
 
 
 if __name__ == "__main__":

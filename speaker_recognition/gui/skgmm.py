@@ -9,7 +9,7 @@ import numpy as np
 from sklearn.mixture import GaussianMixture as GMM
 
 
-class GMMSet(object):
+class GMMSet:
 
     def __init__(self, gmm_order=32):
         self.gmms = []

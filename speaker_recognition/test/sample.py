@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # $File: sample.py
 # $Date: Sat Dec 07 10:37:17 2013 +0800
@@ -9,10 +9,10 @@ import numpy as np
 import random
 
 
-class Sample(object):
+class Sample:
 
     def __init__(self, fs=None, signal=None):
-        if signal == None:
+        if signal is None:
             signal = np.array([])
         self.signal = signal
         self.fs = fs

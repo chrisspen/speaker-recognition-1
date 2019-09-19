@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # $File: gmmset.py
 # $Date: Sun Feb 22 20:17:14 2015 +0800
@@ -14,7 +14,7 @@ import numpy as np
 from .gmm.python.pygmm import GMM
 
 
-class GMMSet(object):
+class GMMSet:
 
     def __init__(self, gmm_order=32, ubm=None, reject_threshold=10, **kwargs):
         self.kwargs = kwargs

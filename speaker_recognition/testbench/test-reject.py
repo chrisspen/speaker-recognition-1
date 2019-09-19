@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # $File: test-reject.py
 # $Date: Fri Dec 27 03:24:35 2013 +0000
@@ -51,7 +51,7 @@ def test_ubm_var_channel():
     gmmset = GMMSet(32, ubm=ubm)
     gmmset.fit(X_train, y_train)
     y_pred = gmmset.predict_with_reject(X_test)
-    for i in xrange(len(y_pred)):
+    for i in range(len(y_pred)):
         print(y_test[i], y_pred[i], '' if y_test[i] == y_pred[i] else 'wrong')
 
     for imposter_audio_file in map(lambda x: 'test-{}.wav'.format(x), range(5)):

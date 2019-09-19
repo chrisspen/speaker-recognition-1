@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # $File: datautil.py
 # $Date: Wed Dec 25 01:10:24 2013 +0000
@@ -20,7 +20,7 @@ def load_train_test(fname, training_data_len, nr_test, testcase_len):
     data_len = len(data)
     training_data = data[:training_data_len]
     test_data = []
-    for i in xrange(nr_test):
+    for i in range(nr_test):
         start_pos = random.randint(training_data_len, data_len - testcase_len)
         end_pos = start_pos + testcase_len
         test_data.append(data[start_pos:end_pos])

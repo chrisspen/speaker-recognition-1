@@ -1,8 +1,10 @@
-#!/usr/bin/python2
+#!/usr/bin/env python
 
-import numpy as np
+import argparse
+import sys
+
+# import numpy as np
 import matplotlib.pyplot as plt
-import argparse, sys
 
 stdin_fname = '$stdin$'
 
@@ -22,7 +24,7 @@ def get_args():
 
     args = parser.parse_args()
 
-    if (not args.show) and len(args.output) == 0:
+    if (not args.show) and not args.output:
         raise Exception("at least one of --show and --output/-o must be specified")
 
     return args
@@ -32,9 +34,10 @@ def filter_valid_range(points, rect):
     """rect = (min_x, max_x, min_y, max_y)"""
     ret = []
     for x, y in points:
-        if x >= rect[0] and x <= rect[1] and y >= rect[2] and y <= rect[3]:
+        # if x >= rect[0] and x <= rect[1] and y >= rect[2] and y <= rect[3]:
+        if rect[0] <= x <= rect[1] and rect[2] <= y <= rect[3]:
             ret.append((x, y))
-    if len(ret) == 0:
+    if not ret:
         ret.append(points[0])
     return ret
 
@@ -59,7 +62,7 @@ def do_plot(data_x, data_y, args):
 
         rect = ax.axis()
 
-        for i in xrange(1, len(data_x)):
+        for i in range(1, len(data_x)):
             if data_y[i] > y_max:
                 y_max = data_y[i]
                 x_max = data_x[i]
@@ -101,7 +104,7 @@ def main():
     for lineno, line in enumerate(fin.readlines()):
         line = [float(i) for i in line.rstrip().split()]
         line_data_format = -1
-        if len(line) == 0:
+        if not line:
             continue
         if len(line) == 2:
             line_data_format = 0

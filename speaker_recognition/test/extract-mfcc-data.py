@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # $File: extract-mfcc-data.py
 # $Date: Tue Dec 24 20:23:39 2013 +0000

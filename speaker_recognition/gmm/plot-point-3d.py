@@ -1,9 +1,11 @@
-#!/usr/bin/python2
+#!/usr/bin/env python
 
-import numpy as np
+import argparse
+import sys
+
+# import numpy as np
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-import argparse, sys
+# from mpl_toolkits.mplot3d import Axes3D
 
 stdin_fname = '$stdin$'
 
@@ -28,7 +30,7 @@ def get_args():
 
     args = parser.parse_args()
 
-    if (not args.show) and len(args.output) == 0:
+    if (not args.show) and not args.output:
         raise Exception("at least one of --show and --output/-o must be specified")
     if args.xlim:
         args.xlim = map(float, args.xlim.rstrip().split(','))
@@ -44,9 +46,9 @@ def filter_valid_range(points, rect):
     """rect = (min_x, max_x, min_y, max_y)"""
     ret = []
     for x, y in points:
-        if x >= rect[0] and x <= rect[1] and y >= rect[2] and y <= rect[3]:
+        if rect[0] <= x <= rect[1] and rect[2] <= y <= rect[3]:
             ret.append((x, y))
-    if len(ret) == 0:
+    if not ret:
         ret.append(points[0])
     return ret
 
@@ -54,7 +56,7 @@ def filter_valid_range(points, rect):
 def do_plot(data_x, data_y, data_z, args):
     fig = plt.figure(figsize=(16.18, 10))
     projection = '2d'
-    if len(data_z) > 0:
+    if data_z:
         projection = '3d'
     ax = fig.add_axes((0.1, 0.2, 0.8, 0.7), projection=projection)
     if projection == '2d':
@@ -68,7 +70,6 @@ def do_plot(data_x, data_y, data_z, args):
     if args.zlim:
         ax.set_zlim3d(args.zlim)
     if args.xlim or args.ylim or args.zlim:
-        pass
         ax.set_aspect('equal')
     else:
         ax.set_aspect('equal', 'datalim')
@@ -87,7 +88,7 @@ def do_plot(data_x, data_y, data_z, args):
 
         rect = ax.axis()
 
-        for i in xrange(1, len(data_x)):
+        for i in range(1, len(data_x)):
             if data_y[i] > y_max:
                 y_max = data_y[i]
                 x_max = data_x[i]
@@ -131,7 +132,7 @@ def main():
         line = [float(i) for i in line.rstrip().split()]
         line_data_format = -1
         x, y, z = None, None, None
-        if len(line) == 0:
+        if not line:
             continue
         if len(line) == 2:
             line_data_format = 0
@@ -153,7 +154,7 @@ def main():
                         . format(lineno + 1))
         data_x.append(x)
         data_y.append(y)
-        if z != None:
+        if z is not None:
             data_z.append(z)
     if args.input != stdin_fname:
         fin.close()

@@ -2,7 +2,7 @@ from multiprocessing import Process, Queue, cpu_count
 import weakref
 
 
-class MultiProcessWorker(object):
+class MultiProcessWorker:
     worker_func = None
     worker_proc = None
     nr_worker = None

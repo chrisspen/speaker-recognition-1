@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # $File: test-gmm.py
 # $Date: Mon Dec 16 00:40:20 2013 +0800
@@ -14,18 +14,18 @@ import numpy as np
 import multiprocessing
 import operator
 from collections import defaultdict
-from sklearn.mixture import GMM
-from gmm.python.pygmm import GMM as new_GMM
+
+# from sklearn.mixture import GMM
+from sklearn.mixture import GaussianMixture as GMM
+
+from .gmm.python.pygmm import GMM as new_GMM
+from .feature import BOB as bob_MFCC
+from .feature import MFCC
+from .sample import Sample
 
 concurrency = multiprocessing.cpu_count()
 
-import BOB as bob_MFCC
-import MFCC
-
-from sample import Sample
-
-
-class Person(object):
+class Person:
 
     def __init__(self, sample=None, name=None, gender=None):
         self.sample = sample
@@ -75,7 +75,7 @@ def get_corpus(dirs):
     return persons
 
 
-class GMMSet(object):
+class GMMSet:
 
     def __init__(self, gmm_order=32, gmm_impl=GMM):
         self.gmm_impl = gmm_impl
@@ -201,7 +201,7 @@ def main():
         p.remove_subsignal(begin, end)
         X_train.append((fs, signal))
     for name, p in persons:
-        for i in xrange(nr_test_fragment_per_person):
+        for i in range(nr_test_fragment_per_person):
             y_test.append(name)
             X_test.append(gen_data((p, test_duration)))
 

@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # $File: plot-wav.py
 # $Date: Mon Dec 30 22:03:40 2013 +0800

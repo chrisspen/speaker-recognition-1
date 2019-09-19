@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # $File: VAD.py
 # $Date: Thu Dec 26 15:33:37 2013 +0800

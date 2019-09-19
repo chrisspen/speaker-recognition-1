@@ -13,7 +13,7 @@ from .MFCC import hamming
 from .utils import cached_func, diff_feature
 
 
-class LPCExtractor(object):
+class LPCExtractor:
 
     def __init__(self, fs, win_length_ms, win_shift_ms, n_lpc, pre_emphasis_coef):
         self.PRE_EMPH = pre_emphasis_coef
@@ -48,7 +48,7 @@ class LPCExtractor(object):
     def extract(self, signal):
         frames = (len(signal) - self.FRAME_LEN) / self.FRAME_SHIFT + 1
         feature = []
-        for f in xrange(frames):
+        for f in range(frames):
             frame = signal[f * self.FRAME_SHIFT:f * self.FRAME_SHIFT + self.FRAME_LEN] * self.window
             frame[1:] -= frame[:-1] * self.PRE_EMPH
             feature.append(self.lpcc(frame))
@@ -64,10 +64,10 @@ def get_lpc_extractor(fs, win_length_ms=32, win_shift_ms=16, n_lpc=15, pre_empha
     return ret
 
 
-def extract(fs, signal=None, diff=False, **kwargs):
+def extract(fs, signal=None, diff=False, **kwargs): # pylint: disable=function-redefined
     """accept two argument, or one as a tuple"""
     if signal is None:
-        assert type(fs) == tuple
+        assert isinstance(fs, tuple)
         fs, signal = fs[0], fs[1]
     signal = cast['float'](signal)
     ret = get_lpc_extractor(fs, **kwargs).extract(signal)
@@ -77,7 +77,7 @@ def extract(fs, signal=None, diff=False, **kwargs):
 
 
 if __name__ == "__main__":
-    extractor = LPCCExtractor(8000)
+    extractor = LPCExtractor(8000)
     fs, signal = wavfile.read("../corpus.silence-removed/Style_Reading/f_001_03.wav")
     start = time.time()
     ret = extractor.extract(signal)

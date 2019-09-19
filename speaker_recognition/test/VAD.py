@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # $File: VAD.py
 # $Date: Thu Dec 26 13:39:12 2013 +0800
@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 POWER_SPECTRUM_FLOOR = 1e-100
 
 
-class LTSV(object):
+class LTSV:
     """
     Long-Term Signal Variability
     """
@@ -84,7 +84,7 @@ class LTSV(object):
             print(msg)
 
 
-class MonoQueue(object):
+class MonoQueue:
 
     def __init__(self, size, greater=lambda a, b: a > b):
         self.queue = deque()
@@ -92,7 +92,7 @@ class MonoQueue(object):
         self.greater = greater
 
     def append(self, ind, val=None):
-        if val == None:
+        if val is None:
             ind, val = ind
         if self.queue:
             assert self.queue[-1][0] < ind
@@ -125,7 +125,7 @@ class MonoMinQueue(MonoQueue):
         MonoQueue.__init__(self, size, lambda a, b: a < b)
 
 
-class VAD(object):
+class VAD:
     """
     Voice Activity Dectection
     """

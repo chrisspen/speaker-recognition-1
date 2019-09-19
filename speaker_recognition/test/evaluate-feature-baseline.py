@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # $File: test-feature.py
 # $Date: Wed Dec 11 22:01:13 2013 +0800
@@ -15,17 +15,17 @@ from itertools import izip
 import multiprocessing
 import operator
 from collections import defaultdict
-from sklearn.mixture import GMM
+
+# from sklearn.mixture import GMM
+from sklearn.mixture import GaussianMixture as GMM
+
+from .feature import BOB as bob_MFCC
+from .feature import MFCC
+from .sample import Sample
 
 concurrency = multiprocessing.cpu_count()
 
-import BOB as bob_MFCC
-import MFCC
-
-from sample import Sample
-
-
-class GMMSet(object):
+class GMMSet:
 
     def __init__(self, gmm_order=32):
         self.gmms = []

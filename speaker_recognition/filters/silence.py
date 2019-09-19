@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # $File: silence.py
 # $Date: Tue Jun 10 15:18:40 2014 +0800

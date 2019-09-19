@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # $File: config.py
 # $Date: Thu Dec 26 13:09:07 2013 +0000

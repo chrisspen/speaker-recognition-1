@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # $File: ltsd.py
 # $Date: Sun Jul 19 17:53:59 2015 +0800
@@ -16,7 +16,7 @@ from pyssp.vad.ltsd import LTSD
 MAGIC_NUMBER = 0.04644
 
 
-class LTSD_VAD(object):
+class LTSD_VAD:
     ltsd = None
     order = 5
 
@@ -42,8 +42,8 @@ class LTSD_VAD(object):
     def plot_ltsd(self, fs, signal):
         signal = self._mononize_signal(signal)
         res, ltsds = self._get_ltsd().compute_with_noise(signal, self.noise_signal)
-        plt.plot(ltsds)
-        plt.show()
+        # plt.plot(ltsds)
+        # plt.show()
 
     def filter(self, signal):
         signal = self._mononize_signal(signal)
@@ -54,7 +54,7 @@ class LTSD_VAD(object):
             voice_signals.append(signal[start:finish])
         try:
             return np.concatenate(voice_signals), res
-        except:
+        except (TypeError, ValueError):
             return np.array([]), []
 
     def _init_window(self, fs):

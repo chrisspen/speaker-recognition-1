@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # $File: train-ubm.py
 # $Date: Fri Dec 27 04:19:58 2013 +0000
@@ -12,13 +12,13 @@ import random
 import datautil
 
 from gmmset import GMM
-#from sklearn.mixture import GMM
 
 nr_mixture = 32
 
 
 def get_gmm():
-    from sklearn.mixture import GMM as skGMM
+    # from sklearn.mixture import GMM as skGMM
+    from sklearn.mixture import GaussianMixture as skGMM
     from gmmset import GMM as pyGMM
     if GMM == skGMM:
         print('using GMM from sklearn')

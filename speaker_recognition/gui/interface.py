@@ -6,12 +6,12 @@
 
 import time
 import os
-import sys
 from collections import defaultdict
-from scipy.io import wavfile
-import numpy as np
 import pickle
 import traceback as tb
+
+from scipy.io import wavfile
+import numpy as np
 
 from .feature import mix_feature
 from .filters.VAD import VAD
@@ -20,7 +20,7 @@ from .skgmm import GMMSet, GMM
 CHECK_ACTIVE_INTERVAL = 1 # seconds
 
 
-class ModelInterface(object):
+class ModelInterface:
 
     UBM_MODEL_FILE = None
 
@@ -127,7 +127,6 @@ class ModelInterface(object):
 
 
 if __name__ == "__main__":
-    """ some testing"""
     m = ModelInterface()
     fs, signal = wavfile.read("../corpus.silence-removed/Style_Reading/f_001_03.wav")
     m.enroll('h', fs, signal[:80000])

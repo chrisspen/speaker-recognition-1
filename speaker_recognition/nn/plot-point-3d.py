@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -87,7 +87,7 @@ def do_plot(data_x, data_y, data_z, args):
 
         rect = ax.axis()
 
-        for i in xrange(1, len(data_x)):
+        for i in range(1, len(data_x)):
             if data_y[i] > y_max:
                 y_max = data_y[i]
                 x_max = data_x[i]

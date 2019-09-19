@@ -9,7 +9,7 @@ import numpy
 import pypr.clustering.gmm as pypr_GMM
 
 
-class UBM(object):
+class UBM:
 
     def __init__(self, n_component, n_iter):
         self.n_comp = n_component
@@ -36,7 +36,7 @@ class UBM(object):
             f.write('\n')
         with open(dirname + "/ubm_variances", 'w') as f:
             for mat13 in self.covars:
-                for d in xrange(13):
+                for d in range(13):
                     f.write(str(mat13[d][d]))
                     f.write(' ')
             f.write('\n')

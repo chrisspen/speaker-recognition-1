@@ -4,10 +4,11 @@
 # Date: Wed Oct 29 22:38:35 2014 +0800
 # Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
-from .utils import cached_func, diff_feature
 import bob
 import bob.ap
 import numpy
+
+from .utils import cached_func, diff_feature
 
 
 @cached_func
@@ -21,7 +22,7 @@ def get_bob_extractor(
 def extract(fs, signal=None, diff=False, **kwargs):
     """accept two argument, or one as a tuple"""
     if signal is None:
-        assert type(fs) == tuple
+        assert isinstance(fs, tuple)
         fs, signal = fs[0], fs[1]
 
     signal = numpy.cast['float'](signal)

@@ -18,7 +18,7 @@ THRES = 0.21
 r = Random()
 
 
-class NoiseReduction(object):
+class NoiseReduction:
 
     def init_noise(self, fs, signal):
         wavfile.write(NOISE_WAV, fs, signal)

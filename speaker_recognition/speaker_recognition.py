@@ -10,12 +10,13 @@ import sys
 import glob
 import os
 import itertools
-import scipy.io.wavfile as wavfile
 
-sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'gui'))
+# import scipy.io.wavfile as wavfile
+
+# sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'gui'))
 from .gui.interface import ModelInterface
 from .gui.utils import read_wav
-from .gui.filters.silence import remove_silence
+# from .gui.filters.silence import remove_silence
 
 UBM_LABEL = '_ubm'
 
@@ -51,7 +52,7 @@ def task_enroll(input_dirs, output_model):
     dirs = itertools.chain(*(glob.glob(d) for d in input_dirs))
     dirs = [d for d in dirs if os.path.isdir(d)]
     files = []
-    if len(dirs) == 0:
+    if not dirs:
         print("No valid directory found!")
         sys.exit(1)
     training_stats = []
@@ -59,7 +60,7 @@ def task_enroll(input_dirs, output_model):
         label = os.path.basename(d.rstrip('/'))
 
         wavs = glob.glob(d + '/*.wav')
-        if len(wavs) == 0:
+        if not wavs:
             print("No wav file found in {0}".format(d))
             continue
         print("Label '{0}' has files: {1}".format(label, ', '.join(wavs)))

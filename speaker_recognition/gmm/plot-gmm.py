@@ -1,16 +1,17 @@
-#!/usr/bin/python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # $File: plot-gmm.py
 # $Date: Tue Dec 10 16:14:53 2013 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
+import argparse
+
 import matplotlib.pyplot as plt
 import matplotlib.mlab as mlab
 from matplotlib import cm
-from scipy import stats, mgrid, c_, reshape, random, rot90
-import argparse
+# from scipy import stats, mgrid, c_, reshape, random, rot90
 from numpy import *
-import numpy as np
+# import numpy as np
 
 
 class GassianTypeNotImplemented(Exception):
@@ -29,7 +30,7 @@ def get_args():
     return args
 
 
-class Gaussian(object):
+class Gaussian:
 
     def __init__(self):
         self.covtype = 1
@@ -44,7 +45,7 @@ class Gaussian(object):
         return exp((x - mean)**2 / (2 * self.sigma**2)) / (2 * pi * self.sigma)
 
 
-class GMM(object):
+class GMM:
 
     def __init__(self):
         self.nr_mixtures = 0

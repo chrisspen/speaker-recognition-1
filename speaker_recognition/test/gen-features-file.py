@@ -18,7 +18,7 @@ from sample import Sample
 from multiprocess import MultiProcessWorker
 
 
-class Person(object):
+class Person:
 
     def __init__(self, sample=None, name=None, gender=None):
         self.sample = sample
@@ -68,7 +68,7 @@ def get_corpus(dirs):
     return ret
 
 
-class DataSet(object):
+class DataSet:
 
     def __init__(self):
         """list item is of format (name, fs, signal)"""
@@ -137,12 +137,12 @@ if __name__ == "__main__":
         fs, signal, begin, end = p.get_fragment_with_interval(enroll_duration)
         p.remove_subsignal(begin, end)
         dataset.enroll.append((p.name, fs, signal))
-        for _ in xrange(nr_test_fragment_per_person):
+        for _ in range(nr_test_fragment_per_person):
             fs, signal = p.get_fragment(test_duration)
             dataset.test.append((p.name, fs, signal))
 
     for p in persons[nr_enroll:]:
-        for _ in xrange(nr_train_fragment):
+        for _ in range(nr_train_fragment):
             fs, signal = p.get_fragment(train_duration)
             dataset.train.append((p.name, fs, signal))
 

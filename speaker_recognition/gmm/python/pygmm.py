@@ -1,11 +1,10 @@
-#!/usr/bin/python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # $File: pygmm.py
 # $Date: Fri Dec 27 11:51:08 2013 +0800
 # $Author: Xinyu Zhou <zxytim[at]gmail[dot]com>
 
 from ctypes import *
-import os
 from os import path
 from numpy import array
 from multiprocessing import cpu_count
@@ -24,11 +23,11 @@ class GMMParameter(Structure):
 pygmm.score_all.restype = c_double
 pygmm.score_instance.restype = c_double
 
-for num, var in enumerate(['COVTYPE_SPHEREICAL', 'COVTYPE_DIAGONAL', 'COVTYPE_FULL']):
-    exec("{} = {}".format(var, num))
+COVTYPE_SPHEREICAL = 0
+COVTYPE_DIAGONAL = 1
+COVTYPE_FULL = 2
 
-
-class GMM(object):
+class GMM:
     gmm = None
 
     def __init__(
@@ -47,7 +46,7 @@ class GMM(object):
                 continue
             exec("self.{0} = {0}".format(name))
 
-        if self.gmm == None:
+        if self.gmm is None:
             self.gmm = pygmm.new_gmm(c_int(nr_mixture), c_int(covariance_type))
 
     def _fill_param_from_model_file(self, model_file):

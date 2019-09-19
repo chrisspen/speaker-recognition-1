@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # $File: split-data.py
 # $Date: Sun Dec 01 20:30:20 2013 +0000

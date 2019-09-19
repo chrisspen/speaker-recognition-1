@@ -16,10 +16,9 @@ def cached_func(function):
         key = args + (kwd_mark,) + tuple(sorted(kwargs.items()))
         if key in cache:
             return cache[key]
-        else:
-            result = function(*args, **kwargs)
-            cache[key] = result
-            return result
+        result = function(*args, **kwargs)
+        cache[key] = result
+        return result
 
     return wrapper
 
@@ -29,6 +28,6 @@ def diff_feature(feat, nd=1):
     feat = feat[1:]
     if nd == 1:
         return numpy.concatenate((feat, diff), axis=1)
-    elif nd == 2:
+    if nd == 2:
         d2 = diff[1:] - diff[:-1]
         return numpy.concatenate((feat[1:], diff[1:], d2), axis=1)

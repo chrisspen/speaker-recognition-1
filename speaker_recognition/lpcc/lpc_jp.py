@@ -16,7 +16,7 @@ def autocorr(x, nlags=None):
            引数がなければ（lag=0からlen(x)-1まですべて）
     """
     N = len(x)
-    if nlags == None: nlags = N
+    if nlags is None: nlags = N
     r = np.zeros(nlags)
     for lag in range(nlags):
         for n in range(N - lag):

@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # $File: plot.py
 # $Date: Wed Dec 04 13:16:27 2013 +0800

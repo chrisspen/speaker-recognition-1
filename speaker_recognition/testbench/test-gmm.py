@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # $File: test-gmm.py
 # $Date: Fri Dec 27 01:42:37 2013 +0000
